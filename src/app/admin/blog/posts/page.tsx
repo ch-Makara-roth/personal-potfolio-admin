@@ -13,7 +13,10 @@ export default function AdminBlogPostsPage() {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<string>('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<{ id: string; title?: string } | null>(null);
+  const [selectedPost, setSelectedPost] = useState<{
+    id: string;
+    title?: string;
+  } | null>(null);
   const { data, isLoading, isError } = useAdminBlogPosts({
     page: 1,
     limit: 20,
@@ -108,7 +111,10 @@ export default function AdminBlogPostsPage() {
                     className="border-b border-gray-100 dark:border-gray-800"
                   >
                     <td className="p-3">
-                      <Link href={`/admin/blog/posts/${p.slug || p.id}`} className="font-medium hover:underline">
+                      <Link
+                        href={`/admin/blog/posts/${p.slug || p.id}`}
+                        className="font-medium hover:underline"
+                      >
                         {p.title}
                       </Link>
                       <div className="text-xs text-gray-500">{p.slug}</div>
@@ -142,9 +148,16 @@ export default function AdminBlogPostsPage() {
                     <td className="p-3 text-right">
                       <div className="flex gap-2 justify-end">
                         <Link href={`/admin/blog/posts/${p.slug || p.id}/edit`}>
-                          <Button size="sm" variant="secondary">Edit</Button>
+                          <Button size="sm" variant="secondary">
+                            Edit
+                          </Button>
                         </Link>
-                        <Button size="sm" variant="destructive" onClick={() => onDelete(p.id, p.title)} disabled={del.isPending}>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => onDelete(p.id, p.title)}
+                          disabled={del.isPending}
+                        >
                           Delete
                         </Button>
                       </div>

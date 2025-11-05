@@ -158,7 +158,13 @@ export function AppLayout({
             </div>
 
             {/* Scroll only inside children container */}
-            <div className={isMobile ? 'space-y-4 flex-1 min-h-0 overflow-y-auto' : 'space-y-6 flex-1 min-h-0 overflow-y-auto'}>
+            <div
+              className={
+                isMobile
+                  ? 'space-y-4 flex-1 min-h-0 overflow-y-auto'
+                  : 'space-y-6 flex-1 min-h-0 overflow-y-auto'
+              }
+            >
               {children}
             </div>
           </div>

@@ -4,7 +4,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminCommentsApi } from '@/lib/api';
 import type { Comment, CommentQuery } from '@/types/api';
 
-export const useAdminComments = (query?: CommentQuery, options?: { enabled?: boolean }) => {
+export const useAdminComments = (
+  query?: CommentQuery,
+  options?: { enabled?: boolean }
+) => {
   return useQuery({
     queryKey: ['admin', 'comments', query],
     queryFn: async () => adminCommentsApi.getComments(query),

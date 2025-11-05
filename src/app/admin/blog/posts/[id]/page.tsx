@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { AppLayout } from '@/components/layout';
 import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
@@ -16,13 +16,21 @@ import {
 import MdxContent from '@/components/features/MdxContent';
 import ConfirmDeleteDialog from '@/components/ui/ConfirmDeleteDialog';
 
-export default function AdminBlogPostDetailPage({ params }: { params: { id: string } }) {
+export default function AdminBlogPostDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id: key } = params; // can be id or slug
   const router = useRouter();
   const [showPostDeleteConfirm, setShowPostDeleteConfirm] = useState(false);
-  const [showCommentDeleteConfirm, setShowCommentDeleteConfirm] = useState(false);
-  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(null);
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(key);
+  const [showCommentDeleteConfirm, setShowCommentDeleteConfirm] =
+    useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
+    null
+  );
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(key);
   const { data, isLoading, isError } = useAdminBlogPost(key);
   const post = (data as any)?.data;
   const deletePost = useDeleteBlogPost();
@@ -88,7 +96,9 @@ export default function AdminBlogPostDetailPage({ params }: { params: { id: stri
           open={showCommentDeleteConfirm}
           title="Delete Comment"
           message="This action cannot be undone. Please type 'delete' to permanently remove this comment."
-          entityName={comments.find((c: any) => c.id === selectedCommentId)?.content}
+          entityName={
+            comments.find((c: any) => c.id === selectedCommentId)?.content
+          }
           loading={deleteComment.isPending}
           onConfirm={onConfirmDeleteComment}
           onClose={() => {
@@ -96,20 +106,34 @@ export default function AdminBlogPostDetailPage({ params }: { params: { id: stri
             setSelectedCommentId(null);
           }}
         />
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold">Post Details</h1>
-            <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => router.push('/admin/blog/posts')}>
-                Back
-              </Button>
-              <Button variant="secondary" onClick={() => router.push(`/admin/blog/posts/${post?.slug || post?.id || key}/edit`)}>
-                Edit
-              </Button>
-              <Button variant="destructive" onClick={onDeletePost} disabled={deletePost.isPending}>
-                Delete
-              </Button>
-            </div>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Post Details</h1>
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => router.push('/admin/blog/posts')}
+            >
+              Back
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                router.push(
+                  `/admin/blog/posts/${post?.slug || post?.id || key}/edit`
+                )
+              }
+            >
+              Edit
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={onDeletePost}
+              disabled={deletePost.isPending}
+            >
+              Delete
+            </Button>
           </div>
+        </div>
 
         {isLoading ? (
           <Card className="p-6">Loading...</Card>
@@ -121,9 +145,7 @@ export default function AdminBlogPostDetailPage({ params }: { params: { id: stri
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <Badge variant="secondary">{post.status}</Badge>
             </div>
-            {post.slug && (
-              <p className="text-sm text-gray-500">/{post.slug}</p>
-            )}
+            {post.slug && <p className="text-sm text-gray-500">/{post.slug}</p>}
             {post.imageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -136,7 +158,9 @@ export default function AdminBlogPostDetailPage({ params }: { params: { id: stri
               <MdxContent source={post.content} />
             </div>
             <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-              <span>Reading: {post.readingTime ? `${post.readingTime} min` : '-'}</span>
+              <span>
+                Reading: {post.readingTime ? `${post.readingTime} min` : '-'}
+              </span>
               <span>👍 {post.likes ?? 0}</span>
               <span>👁️ {post.views ?? 0}</span>
             </div>
@@ -181,14 +205,21 @@ export default function AdminBlogPostDetailPage({ params }: { params: { id: stri
                 </thead>
                 <tbody>
                   {comments.map((c: any) => (
-                    <tr key={c.id} className="border-b border-gray-100 dark:border-gray-800">
+                    <tr
+                      key={c.id}
+                      className="border-b border-gray-100 dark:border-gray-800"
+                    >
                       <td className="p-3">{c.authorName}</td>
                       <td className="p-3">{c.authorEmail}</td>
-                      <td className="p-3 max-w-md truncate" title={c.content}>{c.content}</td>
+                      <td className="p-3 max-w-md truncate" title={c.content}>
+                        {c.content}
+                      </td>
                       <td className="p-3">
                         <select
                           value={c.status}
-                          onChange={(e) => onUpdateCommentStatus(c.id, e.target.value)}
+                          onChange={(e) =>
+                            onUpdateCommentStatus(c.id, e.target.value)
+                          }
                           className="px-2 py-1 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                         >
                           <option value="PENDING">Pending</option>
@@ -199,7 +230,11 @@ export default function AdminBlogPostDetailPage({ params }: { params: { id: stri
                       </td>
                       <td className="p-3 text-right">
                         <div className="flex gap-2 justify-end">
-                          <Button size="sm" variant="destructive" onClick={() => onDeleteComment(c.id)}>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => onDeleteComment(c.id)}
+                          >
                             Delete
                           </Button>
                         </div>

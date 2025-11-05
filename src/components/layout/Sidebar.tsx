@@ -256,7 +256,8 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                     const Icon = item.icon;
                     const index = itemIndexMap.get(item.id) ?? 0;
                     const isActive = isItemActive(item);
-                    const tabIndex = index === Math.max(0, activeIndex) ? 0 : -1;
+                    const tabIndex =
+                      index === Math.max(0, activeIndex) ? 0 : -1;
 
                     return (
                       <li key={item.id} role="listitem">
@@ -296,7 +297,9 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                               `}
                               aria-hidden="true"
                             />
-                            <span className="font-medium text-sm">{item.label}</span>
+                            <span className="font-medium text-sm">
+                              {item.label}
+                            </span>
                           </div>
 
                           {item.badge && (

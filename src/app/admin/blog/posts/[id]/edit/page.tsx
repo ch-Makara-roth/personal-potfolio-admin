@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { AppLayout } from '@/components/layout';
 import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
@@ -63,7 +63,11 @@ function MdxLivePreview({ source }: { source: string }) {
   );
 }
 
-export default function AdminEditBlogPostPage({ params }: { params: { id: string } }) {
+export default function AdminEditBlogPostPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id: key } = params; // can be id or slug
   const router = useRouter();
   const { data, isLoading, isError } = useAdminBlogPost(key);
@@ -126,7 +130,7 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
       title: title.trim(),
       content: content.trim(),
       excerpt: excerpt.trim() || undefined,
-      slug: (slug.trim() || autoSlug) || undefined,
+      slug: slug.trim() || autoSlug || undefined,
       status,
       tags,
       imageUrl: imageUrl.trim() || undefined,
@@ -162,7 +166,9 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
             <Button
               variant="secondary"
               onClick={() =>
-                router.push(`/admin/blog/posts/${post?.slug || post?.id || key}`)
+                router.push(
+                  `/admin/blog/posts/${post?.slug || post?.id || key}`
+                )
               }
             >
               View
@@ -177,7 +183,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
           <form onSubmit={onSubmit} aria-live="polite" className="space-y-6">
             <Card className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="title">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="title"
+                >
                   Title
                 </label>
                 <input
@@ -192,7 +201,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="content">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="content"
+                >
                   Content (MDX)
                 </label>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -207,7 +219,9 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
                     />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Live Preview</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                      Live Preview
+                    </div>
                     <div className="prose dark:prose-invert max-w-none px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
                       <MdxLivePreview source={content} />
                     </div>
@@ -220,7 +234,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="excerpt">
+                  <label
+                    className="block text-sm font-medium mb-1"
+                    htmlFor="excerpt"
+                  >
                     Excerpt
                   </label>
                   <textarea
@@ -232,7 +249,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="slug">
+                  <label
+                    className="block text-sm font-medium mb-1"
+                    htmlFor="slug"
+                  >
                     Slug
                   </label>
                   <input
@@ -247,13 +267,18 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="status">
+                  <label
+                    className="block text-sm font-medium mb-1"
+                    htmlFor="status"
+                  >
                     Status
                   </label>
                   <select
                     id="status"
                     value={status}
-                    onChange={(e) => setStatus(e.target.value as BlogPostStatus)}
+                    onChange={(e) =>
+                      setStatus(e.target.value as BlogPostStatus)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   >
                     <option value="DRAFT">Draft</option>
@@ -262,7 +287,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="tags">
+                  <label
+                    className="block text-sm font-medium mb-1"
+                    htmlFor="tags"
+                  >
                     Tags (comma-separated)
                   </label>
                   <input
@@ -279,7 +307,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="imageUrl">
+                  <label
+                    className="block text-sm font-medium mb-1"
+                    htmlFor="imageUrl"
+                  >
                     Cover Image URL
                   </label>
                   <input
@@ -290,7 +321,10 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="metaTitle">
+                  <label
+                    className="block text-sm font-medium mb-1"
+                    htmlFor="metaTitle"
+                  >
                     SEO Title (max 60 chars)
                   </label>
                   <input
@@ -300,13 +334,18 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   />
                   {errors.metaTitle && (
-                    <p className="text-sm text-red-600 mt-1">{errors.metaTitle}</p>
+                    <p className="text-sm text-red-600 mt-1">
+                      {errors.metaTitle}
+                    </p>
                   )}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="metaDescription">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="metaDescription"
+                >
                   SEO Description (max 160 chars)
                 </label>
                 <textarea
@@ -317,7 +356,9 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                 />
                 {errors.metaDescription && (
-                  <p className="text-sm text-red-600 mt-1">{errors.metaDescription}</p>
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.metaDescription}
+                  </p>
                 )}
               </div>
             </Card>
@@ -325,7 +366,11 @@ export default function AdminEditBlogPostPage({ params }: { params: { id: string
               <Button type="submit" disabled={updateMutation.isPending}>
                 {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
               </Button>
-              <Button type="button" variant="secondary" onClick={() => router.push('/admin/blog/posts')}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => router.push('/admin/blog/posts')}
+              >
                 Cancel
               </Button>
             </div>

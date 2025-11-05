@@ -1,7 +1,11 @@
-"use client";
+'use client';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Button } from './Button';
-import { useFocusTrap, useKeyboardNavigation, useId } from '@/hooks/useAccessibility';
+import {
+  useFocusTrap,
+  useKeyboardNavigation,
+  useId,
+} from '@/hooks/useAccessibility';
 
 export type ConfirmDeleteDialogProps = {
   open: boolean;
@@ -29,17 +33,23 @@ export function ConfirmDeleteDialog({
   const headingId = useId('confirm-delete-heading');
   const descId = useId('confirm-delete-desc');
 
-  const isMatch = useMemo(() => input.trim().toLowerCase() === confirmText.toLowerCase(), [input, confirmText]);
+  const isMatch = useMemo(
+    () => input.trim().toLowerCase() === confirmText.toLowerCase(),
+    [input, confirmText]
+  );
 
   // Reset input when closed/opened
   useEffect(() => {
     if (open) setInput('');
   }, [open]);
 
-  const handleKey = useCallback((key: string) => {
-    if (!open) return;
-    if (key === 'Escape') onClose();
-  }, [open, onClose]);
+  const handleKey = useCallback(
+    (key: string) => {
+      if (!open) return;
+      if (key === 'Escape') onClose();
+    },
+    [open, onClose]
+  );
 
   useKeyboardNavigation(handleKey);
 
@@ -48,7 +58,11 @@ export function ConfirmDeleteDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" aria-hidden="true" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/50"
+        aria-hidden="true"
+        onClick={onClose}
+      />
 
       {/* Dialog */}
       <div
@@ -59,8 +73,13 @@ export function ConfirmDeleteDialog({
         aria-describedby={descId}
         className="relative modal w-full max-w-md rounded-lg bg-white dark:bg-gray-900 shadow-lg border border-gray-200 dark:border-gray-800 p-6"
       >
-        <h2 id={headingId} className="text-lg font-semibold text-red-600">{title}</h2>
-        <p id={descId} className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+        <h2 id={headingId} className="text-lg font-semibold text-red-600">
+          {title}
+        </h2>
+        <p
+          id={descId}
+          className="mt-2 text-sm text-gray-700 dark:text-gray-300"
+        >
           {message}
         </p>
         {entityName && (
@@ -70,8 +89,11 @@ export function ConfirmDeleteDialog({
         )}
 
         <div className="mt-4">
-          <label htmlFor="confirm-delete-input" className="block text-sm font-medium mb-1">
-            Type "{confirmText}" to confirm
+          <label
+            htmlFor="confirm-delete-input"
+            className="block text-sm font-medium mb-1"
+          >
+            Type &quot;{confirmText}&quot; to confirm
           </label>
           <input
             id="confirm-delete-input"

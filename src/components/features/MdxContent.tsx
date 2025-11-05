@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useEffect, useState } from 'react';
 import { evaluate } from '@mdx-js/mdx';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
@@ -17,7 +17,11 @@ export type MdxContentProps = {
  * Client-side MDX renderer using @mdx-js/mdx evaluate.
  * Safe by default (no raw HTML). Supports GitHub Flavored Markdown via remark-gfm.
  */
-export function MdxContent({ source, components, emptyPlaceholder }: MdxContentProps) {
+export function MdxContent({
+  source,
+  components,
+  emptyPlaceholder,
+}: MdxContentProps) {
   const [Comp, setComp] = useState<React.ComponentType<any> | null>(null);
   const [error, setError] = useState<string | null>(null);
 

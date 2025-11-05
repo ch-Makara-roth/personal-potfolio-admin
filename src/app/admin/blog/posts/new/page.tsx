@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { AppLayout } from '@/components/layout';
 import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
@@ -63,7 +63,7 @@ export default function AdminCreateBlogPostPage() {
       title: title.trim(),
       content: content.trim(),
       excerpt: excerpt.trim() || undefined,
-      slug: (slug.trim() || autoSlug) || undefined,
+      slug: slug.trim() || autoSlug || undefined,
       status,
       tags,
       imageUrl: imageUrl.trim() || undefined,
@@ -112,7 +112,10 @@ export default function AdminCreateBlogPostPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="content">
+              <label
+                className="block text-sm font-medium mb-1"
+                htmlFor="content"
+              >
                 Content
               </label>
               <textarea
@@ -130,7 +133,10 @@ export default function AdminCreateBlogPostPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="excerpt">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="excerpt"
+                >
                   Excerpt
                 </label>
                 <textarea
@@ -143,7 +149,10 @@ export default function AdminCreateBlogPostPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="slug">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="slug"
+                >
                   Slug
                 </label>
                 <input
@@ -158,7 +167,10 @@ export default function AdminCreateBlogPostPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="status">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="status"
+                >
                   Status
                 </label>
                 <select
@@ -173,7 +185,10 @@ export default function AdminCreateBlogPostPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="tags">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="tags"
+                >
                   Tags (comma-separated)
                 </label>
                 <input
@@ -203,7 +218,10 @@ export default function AdminCreateBlogPostPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="imageUrl">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="imageUrl"
+                >
                   Cover Image URL
                 </label>
                 <input
@@ -215,7 +233,10 @@ export default function AdminCreateBlogPostPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="metaTitle">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="metaTitle"
+                >
                   SEO Title (max 60 chars)
                 </label>
                 <input
@@ -225,13 +246,18 @@ export default function AdminCreateBlogPostPage() {
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                 />
                 {errors.metaTitle && (
-                  <p className="text-sm text-red-600 mt-1">{errors.metaTitle}</p>
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.metaTitle}
+                  </p>
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="metaDescription">
+              <label
+                className="block text-sm font-medium mb-1"
+                htmlFor="metaDescription"
+              >
                 SEO Description (max 160 chars)
               </label>
               <textarea
@@ -242,7 +268,9 @@ export default function AdminCreateBlogPostPage() {
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
               />
               {errors.metaDescription && (
-                <p className="text-sm text-red-600 mt-1">{errors.metaDescription}</p>
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.metaDescription}
+                </p>
               )}
             </div>
           </Card>

@@ -7,9 +7,10 @@ export const adminBlogApi = {
     import('@/types/api').ApiResponse<import('@/types/api').BlogPost>
   > => {
     // The backend does not expose GET /admin/posts/:id; try best-effort lookup.
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      idOrSlug
-    );
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug
+      );
 
     // Helper to wrap the result as ApiResponse
     const wrap = (post: any) => ({
