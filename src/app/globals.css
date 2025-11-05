@@ -1,0 +1,540 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
+
+:root {
+  /* Primary Purple Gradient */
+  --purple-700: #553c9a;
+  --purple-600: #6b46c1;
+  --purple-500: #8b5cf6;
+  --purple-400: #a78bfa;
+
+  /* Blue Accent Gradient */
+  --blue-700: #1e40af;
+  --blue-600: #3182ce;
+  --blue-500: #3b82f6;
+  --blue-400: #60a5fa;
+  --blue-200: #cbd5e0;
+  --blue-100: #e0f2fe;
+
+  /* Supporting Colors */
+  --orange-500: #f56500;
+  --orange-400: #ed8936;
+  --cyan-500: #06b6d4;
+  --cyan-400: #00b5ff;
+
+  /* Extended Neutral Grays */
+  --gray-25: #fcfcfd;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --gray-950: #030712;
+
+  /* Spacing Scale */
+  --space-1: 0.25rem;
+  /* 4px */
+  --space-2: 0.5rem;
+  /* 8px */
+  --space-3: 0.75rem;
+  /* 12px */
+  --space-4: 1rem;
+  /* 16px */
+  --space-5: 1.25rem;
+  /* 20px */
+  --space-6: 1.5rem;
+  /* 24px */
+  --space-8: 2rem;
+  /* 32px */
+  --space-10: 2.5rem;
+  /* 40px */
+  --space-12: 3rem;
+  /* 48px */
+  --space-16: 4rem;
+  /* 64px */
+
+  /* Border Radius Scale */
+  --radius-sm: 0.25rem;
+  /* 4px */
+  --radius-md: 0.375rem;
+  /* 6px */
+  --radius-lg: 0.5rem;
+  /* 8px */
+  --radius-xl: 0.75rem;
+  /* 12px */
+  --radius-2xl: 1rem;
+  /* 16px */
+  --radius-3xl: 1.5rem;
+  /* 24px */
+
+  /* Typography Scale */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.25rem;
+  /* 20px */
+  --text-2xl: 1.5rem;
+  /* 24px */
+  --text-3xl: 1.875rem;
+  /* 30px */
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-purple-500 ring-offset-2 ring-offset-white;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high), (forced-colors: active) {
+    *:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+      @apply ring-0 ring-offset-0;
+    }
+
+    .card,
+    .card-hover,
+    .card-glass {
+      @apply border-2 border-current;
+    }
+
+    .gradient-purple,
+    .gradient-blue {
+      background: currentColor;
+    }
+
+    .text-gradient-purple,
+    .text-gradient-blue {
+      background: none;
+      @apply text-current;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Remove default button styles */
+  button {
+    @apply focus:outline-none;
+  }
+
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .sr-only.focus:focus,
+  .sr-only:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Skip links */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-purple-600 text-white px-4 py-2 rounded-lg z-50 transition-all duration-200;
+  }
+
+  /* Improved focus indicators for high contrast */
+  @media (prefers-contrast: high) {
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  /* Ensure sufficient color contrast */
+  @media (prefers-contrast: high) {
+    .text-gray-500 {
+      @apply text-gray-900;
+    }
+
+    .text-gray-400 {
+      @apply text-gray-900;
+    }
+
+    .bg-gray-100 {
+      @apply bg-white border border-gray-900;
+    }
+
+    .bg-gray-50 {
+      @apply bg-white;
+    }
+  }
+}
+
+@layer components {
+  /* Card Components */
+  .card {
+    @apply bg-white rounded-xl shadow-card border border-gray-100 backdrop-blur-glass;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  .card-glass {
+    @apply bg-white/80 rounded-xl shadow-glass border border-white/20 backdrop-blur-glass;
+  }
+
+  /* Gradient Utilities */
+  .gradient-purple {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400;
+  }
+
+  .gradient-purple-vertical {
+    @apply bg-gradient-to-b from-purple-600 to-purple-400;
+  }
+
+  .gradient-blue {
+    @apply bg-gradient-to-r from-blue-600 to-blue-200;
+  }
+
+  .gradient-blue-vertical {
+    @apply bg-gradient-to-b from-blue-600 to-blue-200;
+  }
+
+  /* Text Gradients */
+  .text-gradient-purple {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-blue {
+    @apply bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent;
+  }
+
+  /* Button Base Styles */
+  .btn-base {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-sm {
+    @apply btn-base px-3 py-1.5 text-sm;
+  }
+
+  .btn-md {
+    @apply btn-base px-4 py-2 text-sm;
+  }
+
+  .btn-lg {
+    @apply btn-base px-6 py-3 text-base;
+  }
+
+  /* Button Variants */
+  .btn-primary {
+    @apply btn-base gradient-purple text-white shadow-sm hover:shadow-md focus:ring-purple-500;
+  }
+
+  .btn-secondary {
+    @apply btn-base bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200 focus:ring-gray-500;
+  }
+
+  .btn-outline {
+    @apply btn-base bg-transparent text-purple-600 border border-purple-600 hover:bg-purple-50 focus:ring-purple-500;
+  }
+
+  .btn-ghost {
+    @apply btn-base bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-gray-500;
+  }
+
+  /* Badge Styles */
+  .badge-base {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply badge-base bg-purple-100 text-purple-800;
+  }
+
+  .badge-secondary {
+    @apply badge-base bg-gray-100 text-gray-800;
+  }
+
+  .badge-success {
+    @apply badge-base bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply badge-base bg-orange-100 text-orange-800;
+  }
+
+  .badge-info {
+    @apply badge-base bg-blue-100 text-blue-800;
+  }
+
+  /* Avatar Styles */
+  .avatar-base {
+    @apply inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-600 font-medium;
+  }
+
+  .avatar-sm {
+    @apply avatar-base h-8 w-8 text-sm;
+  }
+
+  .avatar-md {
+    @apply avatar-base h-10 w-10 text-sm;
+  }
+
+  .avatar-lg {
+    @apply avatar-base h-12 w-12 text-base;
+  }
+
+  .avatar-xl {
+    @apply avatar-base h-16 w-16 text-lg;
+  }
+
+  /* Input Styles */
+  .input-base {
+    @apply block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder-gray-400 shadow-sm transition-colors focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 disabled:bg-gray-50 disabled:text-gray-500;
+  }
+
+  /* Animation Utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  /* Responsive Typography */
+  .text-responsive-sm {
+    @apply text-sm md:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base md:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg md:text-xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-xl md:text-2xl;
+  }
+
+  /* Layout Utilities */
+  .container-responsive {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .sidebar-width {
+    width: 200px;
+  }
+
+  /* Scrollbar Styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203, 213, 224) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(203, 213, 224);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(156, 163, 175);
+  }
+
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    /* Larger touch targets */
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Better spacing for mobile */
+    .mobile-spacing {
+      @apply space-y-4;
+    }
+
+    /* Mobile-friendly cards */
+    .card {
+      @apply mx-2;
+    }
+
+    /* Improved mobile navigation */
+    .mobile-nav {
+      @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2;
+    }
+  }
+
+  /* Touch-friendly interactions */
+  @media (hover: none) and (pointer: coarse) {
+    /* Remove hover effects on touch devices */
+    .hover\:bg-gray-100:hover {
+      background-color: inherit;
+    }
+
+    /* Larger touch targets */
+    button,
+    a[role='button'] {
+      @apply py-3 px-4;
+    }
+
+    /* Better focus indicators for touch */
+    *:focus {
+      @apply ring-2 ring-purple-500 ring-offset-2;
+    }
+  }
+
+  /* Safe area support for mobile devices */
+  @supports (padding: env(safe-area-inset-top)) {
+    .safe-area-top {
+      padding-top: env(safe-area-inset-top);
+    }
+
+    .safe-area-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .safe-area-left {
+      padding-left: env(safe-area-inset-left);
+    }
+
+    .safe-area-right {
+      padding-right: env(safe-area-inset-right);
+    }
+
+    .safe-area-inset {
+      padding-top: env(safe-area-inset-top);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+    }
+  }
+
+  /* Responsive grid utilities */
+  .grid-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6;
+  }
+
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6;
+  }
+
+  /* Mobile-first spacing */
+  .spacing-responsive {
+    @apply space-y-4 md:space-y-6 lg:space-y-8;
+  }
+
+  /* Responsive text sizing */
+  .text-responsive-heading {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+
+  .text-responsive-subheading {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  .text-responsive-body {
+    @apply text-sm md:text-base;
+  }
+
+  /* Mobile modal adjustments */
+  @media (max-width: 640px) {
+    .modal-mobile {
+      @apply fixed inset-0 m-0 rounded-none max-h-full;
+    }
+  }
+
+  /* Improved focus management for mobile */
+  @media (max-width: 768px) {
+    /* Prevent zoom on input focus */
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+
+    /* Better modal positioning */
+    .modal {
+      @apply mx-4 my-8;
+    }
+  }
+
+  /* High DPI display support */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .high-dpi-border {
+      border-width: 0.5px;
+    }
+  }
+}

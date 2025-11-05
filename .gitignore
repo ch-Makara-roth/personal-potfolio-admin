@@ -1,0 +1,54 @@
+# --- Node & package managers ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Logs ---
+logs/
+*.log
+lerna-debug.log*
+
+# --- Next.js ---
+.next/
+out/
+
+# --- TypeScript ---
+*.tsbuildinfo
+
+# --- Testing & coverage ---
+coverage/
+.nyc_output/
+
+# --- Runtime data ---
+pids/
+*.pid
+*.pid.lock
+
+# --- Environment files ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Editors & OS files ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Linting cache ---
+.eslintcache
+
+# --- Vercel ---
+.vercel/
+
+# Optional: ignore SWC cache (uncomment if you don't want to commit SWC artifacts)
+# .swc/
+
+# Optional: general cache directory (uncomment if tools create a top-level cache)
+# .cache/
