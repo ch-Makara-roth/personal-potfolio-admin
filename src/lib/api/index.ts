@@ -10,3 +10,4 @@ export * from './hiringSources';
 export * from './jobs';
 export * from './upgrade';
 export * from './mocks';
+export * from './projects';

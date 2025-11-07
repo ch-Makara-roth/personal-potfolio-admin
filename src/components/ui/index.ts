@@ -26,3 +26,5 @@ export {
   UpgradeCardSkeleton,
   JobsTableSkeleton,
 } from './Skeleton';
+export { DataTable } from './DataTable';
+export { FormBuilder } from './FormBuilder';

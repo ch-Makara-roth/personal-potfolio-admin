@@ -25,9 +25,11 @@ export const authApi = {
     const apiVersion = process.env.NEXT_PUBLIC_API_VERSION || 'v1';
     return apiRequest<AuthTokens>(`/${apiVersion}/auth/refresh`, {
       method: 'POST',
-      headers: refreshToken
-        ? { Authorization: `Bearer ${refreshToken}` }
-        : undefined,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Many backends expect the refresh token in the JSON body
+      body: JSON.stringify(refreshToken ? { refreshToken } : {}),
     });
   },
 
