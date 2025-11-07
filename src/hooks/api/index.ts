@@ -71,3 +71,13 @@ export {
   useChangePassword,
   authKeys,
 } from './useProfile';
+
+export {
+  useProjects,
+  useMyProjects,
+  useProject,
+  useCreateProject,
+  useUpdateProject,
+  useDeleteProject,
+  projectKeys,
+} from './useProjects';

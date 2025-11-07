@@ -6,7 +6,7 @@ import { QueryProvider } from '@/components/providers/QueryProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'CONSULT - Portfolio Admin',
+  title: 'Portfolio Admin',
   description: 'Modern hiring analytics dashboard',
 };
 

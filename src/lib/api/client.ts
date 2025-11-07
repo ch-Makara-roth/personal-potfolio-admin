@@ -6,10 +6,25 @@ import {
 } from '@/stores/auth-store';
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3111/api';
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  // 'http://localhost:3111/api';
+  'https://api.chhuonmakararoth.site/api';
 // API version for REST endpoints (default v1). Configure via NEXT_PUBLIC_API_VERSION
 const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION || 'v1';
 const API_TIMEOUT = 10000; // 10 seconds
+
+// Guard to avoid multiple redirects to login
+let isRedirectingToLogin = false;
+function redirectToLogin() {
+  if (typeof window !== 'undefined' && !isRedirectingToLogin) {
+    isRedirectingToLogin = true;
+    // Small delay to allow store updates to flush
+    setTimeout(() => {
+      // Use replace so user can't navigate back to the protected page with browser back
+      window.location.replace('/login');
+    }, 0);
+  }
+}
 
 export class ApiClientError extends Error {
   constructor(
@@ -154,23 +169,31 @@ async function refreshAccessToken(): Promise<AuthTokens | null> {
       const refreshToken = getRefreshToken();
       try {
         // Refresh endpoint (e.g., /api/v1/auth/refresh). Server reads refresh token
-        // from cookies or Authorization header.
+        // from cookies or Authorization header. We should attempt refresh even if
+        // we don't have a refresh token in local storage, because many backends
+        // store the refresh token in an HttpOnly cookie.
         const refreshUrl = `${API_BASE_URL}/${API_VERSION}/auth/refresh`;
+
+        // Build headers conditionally. If we have a refresh token stored, also send it
+        // in the Authorization header to maximize compatibility with different backends.
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+          ...(refreshToken ? { Authorization: `Bearer ${refreshToken}` } : {}),
+        };
+
         const resp = await fetch(refreshUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            // Prefer sending refresh token via Authorization if available; server may also use cookies
-            ...(refreshToken
-              ? { Authorization: `Bearer ${refreshToken}` }
-              : {}),
-          },
+          headers,
+          // If we have a refresh token available, include it in the request body.
+          // Otherwise, rely on HttpOnly cookies via `credentials: 'include'`.
+          body: refreshToken ? JSON.stringify({ refreshToken }) : undefined,
           credentials: 'include',
         });
 
         if (!resp.ok) {
-          // Clear session on failed refresh
+          // Clear session on failed refresh and redirect to login
           useAuthStore.getState().clearSession();
+          redirectToLogin();
           return null;
         }
 
@@ -182,9 +205,16 @@ async function refreshAccessToken(): Promise<AuthTokens | null> {
           updateTokens(tokens);
           return tokens;
         }
+        // If server responded with success: false or provided an explicit validation error,
+        // clear session and redirect to login.
+        if (normalized.status === 'error' || raw?.code === 'VALIDATION_ERROR') {
+          useAuthStore.getState().clearSession();
+          redirectToLogin();
+        }
         return null;
       } catch (e) {
-        // Network or parsing error
+        // Network or parsing error: do not force logout here to avoid
+        // signing the user out due to transient network issues.
         return null;
       } finally {
         // Reset in-flight promise after completion

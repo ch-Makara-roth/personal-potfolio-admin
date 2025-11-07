@@ -352,3 +352,71 @@ export interface ContactQuery {
   dateFrom?: string; // ISO date
   dateTo?: string; // ISO date
 }
+
+// Project Management Types
+export type ProjectStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  content?: string;
+  slug?: string;
+  status: ProjectStatus;
+  technologies: string[]; // at least 1 required on create
+  featured?: boolean;
+  githubUrl?: string; // URL
+  liveUrl?: string; // URL
+  imageUrl?: string; // primary image URL
+  images?: string[]; // additional images URLs
+  metaTitle?: string; // up to 60 chars
+  metaDescription?: string; // up to 160 chars
+  ownerId?: string; // project owner (for RBAC)
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+export interface ProjectQuery {
+  page?: number;
+  limit?: number;
+  status?: ProjectStatus;
+  ownerId?: string;
+  technologies?: string[]; // CSV on server
+  search?: string;
+  featured?: boolean;
+  sortBy?: 'createdAt' | 'updatedAt' | 'title' | 'publishedAt' | 'featured';
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface CreateProjectRequest {
+  title: string;
+  description: string;
+  technologies: string[]; // min 1
+  content?: string;
+  slug?: string;
+  status?: ProjectStatus; // default DRAFT
+  featured?: boolean;
+  githubUrl?: string;
+  liveUrl?: string;
+  imageUrl?: string;
+  images?: string[];
+  metaTitle?: string; // <= 60 chars
+  metaDescription?: string; // <= 160 chars
+}
+
+export interface UpdateProjectRequest {
+  title?: string;
+  description?: string;
+  technologies?: string[];
+  content?: string;
+  slug?: string;
+  status?: ProjectStatus;
+  featured?: boolean;
+  githubUrl?: string;
+  liveUrl?: string;
+  imageUrl?: string;
+  images?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+}
