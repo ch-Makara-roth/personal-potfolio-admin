@@ -143,7 +143,7 @@ export function AppLayout({
           {/* Content wrapper with responsive spacing */}
           <div
             className={cn(
-              `${getPadding()} pt-0 ${isMobile ? 'px-4' : ''} h-full min-h-0 w-full flex flex-col`,
+              `p-4 md:p-6 xl:p-8 pt-0 h-full min-h-0 w-full flex flex-col`,
               contentContainerClassName
             )}
           >

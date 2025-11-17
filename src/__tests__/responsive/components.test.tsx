@@ -42,6 +42,13 @@ jest.mock('@/hooks/api', () => ({
 
 jest.mock('next/navigation', () => ({
   usePathname: () => '/',
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 // Mock window properties for responsive testing
@@ -138,7 +145,8 @@ describe('Responsive Component Behavior', () => {
         </AppLayout>
       );
 
-      expect(screen.getByRole('navigation')).toBeInTheDocument();
+      const desktopAside = document.querySelector('aside');
+      expect(desktopAside).not.toBeNull();
       expect(screen.getByRole('main')).toBeInTheDocument();
     });
 
@@ -288,7 +296,9 @@ describe('Responsive Component Behavior', () => {
       );
 
       expect(screen.getByRole('main')).toBeInTheDocument();
-      expect(screen.getByRole('navigation')).toBeInTheDocument();
+      // Verify sidebar (aside) element exists even if hidden/collapsed
+      const asideEl = document.querySelector('aside');
+      expect(asideEl).not.toBeNull();
     });
 
     it('should handle large desktop (1920px)', () => {
@@ -301,7 +311,8 @@ describe('Responsive Component Behavior', () => {
       );
 
       expect(screen.getByRole('main')).toBeInTheDocument();
-      expect(screen.getByRole('navigation')).toBeInTheDocument();
+      const asideElDesktop = document.querySelector('aside');
+      expect(asideElDesktop).not.toBeNull();
     });
   });
 

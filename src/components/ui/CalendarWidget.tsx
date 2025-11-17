@@ -185,7 +185,14 @@ export const CalendarWidget: React.FC<CalendarWidgetComponentProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <button
+          type="button"
           onClick={handlePrevMonth}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handlePrevMonth();
+            }
+          }}
           className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
           aria-label="Previous month"
         >
@@ -195,7 +202,14 @@ export const CalendarWidget: React.FC<CalendarWidgetComponentProps> = ({
         <h3 className="text-lg font-semibold text-gray-900">{monthYear}</h3>
 
         <button
+          type="button"
           onClick={handleNextMonth}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleNextMonth();
+            }
+          }}
           className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
           aria-label="Next month"
         >

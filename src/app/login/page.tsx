@@ -3,11 +3,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { authApi } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { useAuthStore } from '@/stores';
 import { useNotificationActions } from '@/stores';
 import { Eye, EyeOff, Apple } from 'lucide-react';
+import { logAuthEvent, reportAuthError } from '@/services/auth-logging';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,9 +26,11 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    logAuthEvent('login_start');
     try {
       const res = await authApi.login({ identifier, password });
       setSession(res.data.user, res.data.tokens);
+      logAuthEvent('login_success', { userId: res.data.user.id });
       showToast({
         type: 'success',
         title: 'Welcome back!',
@@ -36,6 +40,8 @@ export default function LoginPage() {
     } catch (err: any) {
       const message = err?.message || 'Login failed. Please try again.';
       setError(message);
+      logAuthEvent('login_failure');
+      reportAuthError(err instanceof Error ? err : new Error(String(err)));
       showToast({ type: 'error', title: 'Login failed', message });
     } finally {
       setLoading(false);
@@ -156,10 +162,13 @@ export default function LoginPage() {
       {/* Right: Hero photo with overlays (full height) */}
       <div className="relative hidden md:block min-h-[60vh] md:min-h-screen bg-gray-900">
         {/* Background photo */}
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1920&auto=format&fit=crop"
           alt="Team collaborating around a desk"
-          className="h-full w-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
         {/* mini calendar bottom center */}
         <div className="absolute left-1/2 -translate-x-1/2 bottom-28">

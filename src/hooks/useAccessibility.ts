@@ -1,9 +1,8 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useId as reactUseId } from 'react';
 import {
   isHighContrastMode,
   prefersReducedMotion,
   trapFocus,
-  generateId,
   liveRegionManager,
   KEYBOARD_KEYS,
   type KeyboardKey,
@@ -115,15 +114,10 @@ export const useKeyboardNavigation = (
   };
 };
 
-// Hook for generating stable IDs
+// Hook for generating SSR-safe, deterministic IDs
 export const useId = (prefix?: string) => {
-  const idRef = useRef<string>();
-
-  if (!idRef.current) {
-    idRef.current = generateId(prefix);
-  }
-
-  return idRef.current;
+  const id = reactUseId();
+  return prefix ? `${prefix}-${id}` : id;
 };
 
 // Hook for managing ARIA attributes

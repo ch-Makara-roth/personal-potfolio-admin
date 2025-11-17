@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout';
 import { AuthGuard } from '@/components/providers/AuthGuard';
@@ -148,17 +149,23 @@ export default function ViewProjectPage() {
                     <h2 className="text-lg font-semibold mb-2">Images</h2>
                     <div className="flex flex-wrap gap-3">
                       {p.imageUrl && (
-                        <img
+                        <Image
                           src={p.imageUrl}
                           alt={`${p.title} primary`}
+                          width={192}
+                          height={128}
+                          unoptimized
                           className="w-48 h-32 object-cover rounded border"
                         />
                       )}
                       {(p.images || []).map((img, idx) => (
-                        <img
+                        <Image
                           key={`${img}-${idx}`}
                           src={img}
                           alt={`${p.title} ${idx + 1}`}
+                          width={192}
+                          height={128}
+                          unoptimized
                           className="w-48 h-32 object-cover rounded border"
                         />
                       ))}

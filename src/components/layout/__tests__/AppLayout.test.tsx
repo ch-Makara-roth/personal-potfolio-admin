@@ -112,26 +112,39 @@ describe('AppLayout', () => {
     );
 
     const mainContent = container.querySelector('main');
-    expect(mainContent).toHaveClass(
-      'flex-1',
-      'transition-all',
-      'duration-300',
-      'pt-16',
-      'min-h-screen'
-    );
+    expect(mainContent).toHaveClass('flex-1');
+    expect(mainContent).toHaveClass('transition-all');
+    expect(mainContent).toHaveClass('duration-300');
+    expect(mainContent).toHaveClass('ease-in-out');
+    expect(mainContent).toHaveClass('pt-18');
   });
 
   it('renders mobile overlay when sidebar is expanded', () => {
+    // Simulate mobile viewport
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 400,
+    });
+    // Trigger resize so useBreakpoint updates
+    fireEvent(window, new Event('resize'));
+
     const { container } = render(
       <AppLayout>
         <div>Test Content</div>
       </AppLayout>
     );
 
+    // Sidebar auto-collapses on mobile; expand it to show overlay
+    const menuButton = screen.getByTestId('menu-button');
+    fireEvent.click(menuButton);
+
     // Should have overlay div for mobile
-    const overlay = container.querySelector(
-      '.fixed.inset-0.bg-black.bg-opacity-50'
-    );
+    const overlay = screen.getByRole('presentation');
     expect(overlay).toBeInTheDocument();
+    expect(overlay).toHaveClass('fixed');
+    expect(overlay).toHaveClass('inset-0');
+    expect(overlay).toHaveClass('bg-black');
+    expect(overlay).toHaveClass('bg-opacity-50');
   });
 });

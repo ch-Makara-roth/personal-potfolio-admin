@@ -3,6 +3,7 @@ import { AppLayout } from '@/components/layout';
 import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/Badge';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -147,12 +148,16 @@ export default function AdminBlogPostDetailPage({
             </div>
             {post.slug && <p className="text-sm text-gray-500">/{post.slug}</p>}
             {post.imageUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={post.imageUrl}
-                alt={post.title}
-                className="w-full max-h-64 object-cover rounded-lg"
-              />
+              <div className="relative w-full h-64">
+                <Image
+                  src={post.imageUrl}
+                  alt={post.title}
+                  fill
+                  unoptimized
+                  sizes="100vw"
+                  className="object-cover rounded-lg"
+                />
+              </div>
             )}
             <div className="prose dark:prose-invert max-w-none">
               <MdxContent source={post.content} />

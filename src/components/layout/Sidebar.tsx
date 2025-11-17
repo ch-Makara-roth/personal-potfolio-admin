@@ -246,7 +246,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           {/* Navigation Groups */}
           <nav
             id={navId}
-            className="flex-1 p-4 space-y-6"
+            className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6"
             aria-label="Main navigation menu"
           >
             {navigationGroups.map((group) => (
@@ -277,7 +277,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                           onKeyDown={(e) => handleNavItemKeyDown(e, index)}
                           tabIndex={tabIndex}
                           className={`
-                            flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200
+                            flex items-center justify-between px-3 py-3 sm:py-2.5 rounded-lg transition-all duration-200
                             group hover:bg-blue-50 dark:hover:bg-gray-800 focus:bg-blue-50 dark:focus:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
                             ${
                               isActive

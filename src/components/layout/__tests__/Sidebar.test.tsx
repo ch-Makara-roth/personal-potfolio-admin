@@ -30,28 +30,28 @@ describe('Sidebar', () => {
   it('renders all navigation items', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
-    expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('Team & Availability')).toBeInTheDocument();
-    expect(screen.getByText('Services')).toBeInTheDocument();
-    expect(screen.getByText('Clients')).toBeInTheDocument();
+    // Updated to match current navigation groups
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Projects')).toBeInTheDocument();
+    expect(screen.getByText('Blog Posts')).toBeInTheDocument();
+    expect(screen.getByText('Comments')).toBeInTheDocument();
+    expect(screen.getByText('Contact')).toBeInTheDocument();
+    expect(screen.getByText('Contact Stats')).toBeInTheDocument();
     expect(screen.getByText('Settings')).toBeInTheDocument();
     expect(screen.getByText('Notifications')).toBeInTheDocument();
   });
 
-  it('renders badge for Team & Availability', () => {
+  it('does not render badges when none are provided', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
-
-    const badge = screen.getByTestId('badge');
-    expect(badge).toHaveTextContent('1,436');
-    expect(badge).toHaveAttribute('data-variant', 'secondary');
+    expect(screen.queryByTestId('badge')).not.toBeInTheDocument();
   });
 
   it('highlights active navigation item', () => {
-    mockUsePathname.mockReturnValue('/team');
+    mockUsePathname.mockReturnValue('/projects');
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
-    const teamLink = screen.getByText('Team & Availability').closest('a');
-    expect(teamLink).toHaveClass(
+    const projectsLink = screen.getByText('Projects').closest('a');
+    expect(projectsLink).toHaveClass(
       'bg-purple-50',
       'text-purple-700',
       'border',
@@ -84,7 +84,7 @@ describe('Sidebar', () => {
   it('calls onToggle when close button is clicked', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
-    const closeButton = screen.getByLabelText('Close sidebar');
+    const closeButton = screen.getByLabelText('Close navigation sidebar');
     fireEvent.click(closeButton);
 
     expect(mockOnToggle).toHaveBeenCalledTimes(1);
@@ -94,7 +94,9 @@ describe('Sidebar', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
     expect(screen.getByText('Navigation')).toBeInTheDocument();
-    expect(screen.getByLabelText('Close sidebar')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Close navigation sidebar')
+    ).toBeInTheDocument();
   });
 
   it('renders footer with copyright', () => {
@@ -107,8 +109,11 @@ describe('Sidebar', () => {
     mockUsePathname.mockReturnValue('/other'); // Set to non-matching path
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
-    const homeLink = screen.getByText('Home').closest('a');
-    expect(homeLink).toHaveClass('hover:bg-blue-50', 'hover:text-blue-600');
+    const dashboardLink = screen.getByText('Dashboard').closest('a');
+    expect(dashboardLink).toHaveClass(
+      'hover:bg-blue-50',
+      'hover:text-blue-600'
+    );
   });
 
   it('renders all navigation icons', () => {
@@ -118,7 +123,7 @@ describe('Sidebar', () => {
 
     // Check that each navigation item has an icon (svg element)
     const navItems = container.querySelectorAll('nav a');
-    expect(navItems).toHaveLength(6);
+    expect(navItems).toHaveLength(8);
 
     navItems.forEach((item) => {
       const icon = item.querySelector('svg');
@@ -127,12 +132,10 @@ describe('Sidebar', () => {
     });
   });
 
-  it('formats badge number correctly', () => {
+  it('renders sr-only description for items with description', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
-    // The badge should show "1,436" (formatted with comma)
-    const badge = screen.getByTestId('badge');
-    expect(badge).toHaveTextContent('1,436');
+    expect(screen.getByText('Dashboard and overview')).toBeInTheDocument();
   });
 
   it('applies correct responsive classes', () => {

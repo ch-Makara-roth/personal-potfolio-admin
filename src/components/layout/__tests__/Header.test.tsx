@@ -53,7 +53,7 @@ describe('Header', () => {
   it('renders notification bell with count', () => {
     render(<Header onMenuClick={mockOnMenuClick} />);
 
-    const bellButton = screen.getByLabelText('Notifications');
+    const bellButton = screen.getByLabelText(/Notifications/);
     expect(bellButton).toBeInTheDocument();
 
     // Check for notification count badge
@@ -68,13 +68,14 @@ describe('Header', () => {
     const avatar = screen.getByTestId('avatar');
     expect(avatar).toBeInTheDocument();
     expect(avatar).toHaveAttribute('data-size', 'sm');
-    expect(avatar).toHaveAttribute('data-fallback', 'JD');
+    // With no user profile available, fallback should be 'U'
+    expect(avatar).toHaveAttribute('data-fallback', 'U');
   });
 
   it('calls onMenuClick when mobile menu button is clicked', () => {
     render(<Header onMenuClick={mockOnMenuClick} />);
 
-    const menuButton = screen.getByLabelText('Toggle sidebar');
+    const menuButton = screen.getByLabelText('Toggle navigation sidebar');
     fireEvent.click(menuButton);
 
     expect(mockOnMenuClick).toHaveBeenCalledTimes(1);
@@ -83,7 +84,7 @@ describe('Header', () => {
   it('toggles user dropdown menu when clicked', () => {
     render(<Header onMenuClick={mockOnMenuClick} />);
 
-    const userMenuButton = screen.getByLabelText('User menu');
+    const userMenuButton = screen.getByLabelText('User account menu');
 
     // Initially, dropdown should not be visible
     expect(screen.queryByText('Profile Settings')).not.toBeInTheDocument();
@@ -91,8 +92,9 @@ describe('Header', () => {
     // Click to open dropdown
     fireEvent.click(userMenuButton);
     expect(screen.getByText('Profile Settings')).toBeInTheDocument();
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('john@example.com')).toBeInTheDocument();
+    // Default display name/email when no user is set
+    expect(screen.getByText('User')).toBeInTheDocument();
+    expect(screen.getByText('unknown@domain')).toBeInTheDocument();
 
     // Click again to close dropdown
     fireEvent.click(userMenuButton);
@@ -102,12 +104,10 @@ describe('Header', () => {
   it('renders all dropdown menu items', () => {
     render(<Header onMenuClick={mockOnMenuClick} />);
 
-    const userMenuButton = screen.getByLabelText('User menu');
+    const userMenuButton = screen.getByLabelText('User account menu');
     fireEvent.click(userMenuButton);
 
     expect(screen.getByText('Profile Settings')).toBeInTheDocument();
-    expect(screen.getByText('Account Settings')).toBeInTheDocument();
-    expect(screen.getByText('Billing')).toBeInTheDocument();
     expect(screen.getByText('Sign Out')).toBeInTheDocument();
   });
 
@@ -118,7 +118,7 @@ describe('Header', () => {
     expect(header).toHaveClass('fixed', 'top-0', 'left-0', 'right-0', 'z-30');
 
     // Check mobile menu button has lg:hidden class
-    const menuButton = screen.getByLabelText('Toggle sidebar');
+    const menuButton = screen.getByLabelText('Toggle navigation sidebar');
     expect(menuButton).toHaveClass('lg:hidden');
 
     // Check CONSULT title has hidden sm:block classes
@@ -129,16 +129,14 @@ describe('Header', () => {
   it('closes user menu when clicking outside', () => {
     const { container } = render(<Header onMenuClick={mockOnMenuClick} />);
 
-    const userMenuButton = screen.getByLabelText('User menu');
+    const userMenuButton = screen.getByLabelText('User account menu');
     fireEvent.click(userMenuButton);
 
     // Menu should be open
     expect(screen.getByText('Profile Settings')).toBeInTheDocument();
 
-    // Click on the overlay
-    const overlay = container.querySelector('.fixed.inset-0.z-30');
-    expect(overlay).toBeInTheDocument();
-    fireEvent.click(overlay!);
+    // Click outside to close (simulate mousedown on document)
+    fireEvent.mouseDown(document.body);
 
     // Menu should be closed
     expect(screen.queryByText('Profile Settings')).not.toBeInTheDocument();
