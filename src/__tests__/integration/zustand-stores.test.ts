@@ -479,12 +479,19 @@ describe('Zustand Stores Integration Tests', () => {
     });
 
     it('should handle invalid import data', () => {
+      // Silence expected error logging from importPreferences for cleaner test output
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       const { result } = renderHook(() => useUserPreferencesStore());
 
       act(() => {
         const success = result.current.importPreferences('invalid json');
         expect(success).toBe(false);
       });
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('should persist preferences to localStorage', () => {

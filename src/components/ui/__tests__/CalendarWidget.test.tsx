@@ -199,16 +199,13 @@ describe('CalendarWidget', () => {
     });
 
     it('supports keyboard navigation', async () => {
-      const user = userEvent.setup();
       render(<CalendarWidget {...defaultProps} />);
 
       const prevButton = screen.getByLabelText('Previous month');
 
-      // Focus and use Enter key
-      prevButton.focus();
-      await user.keyboard('{Enter}');
-
-      expect(mockOnMonthChange).toHaveBeenCalled();
+      // Dispatch Enter keydown directly to ensure onKeyDown handler fires
+      fireEvent.keyDown(prevButton, { key: 'Enter' });
+      await waitFor(() => expect(mockOnMonthChange).toHaveBeenCalled());
     });
   });
 

@@ -78,7 +78,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   const displayName = useMemo(() => {
     const user = userProfile || storedUser;
-    if (!user) return 'Guest';
+    if (!user) return 'User';
     const first = user.firstName?.trim();
     const last = user.lastName?.trim();
     if (first || last)
@@ -123,6 +123,11 @@ export function Header({ onMenuClick }: HeaderProps) {
     clearSession();
     setShowUserMenu(false);
     announce('Signed out', 'polite');
+    try {
+      const uid = storedUser?.id;
+      const { logAuthEvent } = require('@/services/auth-logging');
+      logAuthEvent('logout', { userId: uid });
+    } catch {}
     router.push('/login');
   };
 
