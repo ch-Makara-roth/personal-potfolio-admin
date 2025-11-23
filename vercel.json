@@ -1,0 +1,8 @@
+# Vercel Build Configuration
+# This tells Vercel to use npm/node instead of trying to detect bun
+
+{
+    "buildCommand": "npm run build",
+    "devCommand": "npm run dev",
+    "installCommand": "npm install --legacy-peer-deps"
+}
