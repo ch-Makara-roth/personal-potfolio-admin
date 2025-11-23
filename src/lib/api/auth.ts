@@ -20,16 +20,19 @@ export const authApi = {
     });
   },
 
-  // Refresh tokens (server reads refresh token from cookie or Authorization header)
+  // Refresh tokens (server may require refresh token explicitly)
   refresh: async (refreshToken?: string): Promise<ApiResponse<AuthTokens>> => {
     const apiVersion = process.env.NEXT_PUBLIC_API_VERSION || 'v1';
+    const { getRefreshToken } = await import('@/stores/auth-store');
+    const token = refreshToken || getRefreshToken();
     return apiRequest<AuthTokens>(`/${apiVersion}/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       // Many backends expect the refresh token in the JSON body
-      body: JSON.stringify(refreshToken ? { refreshToken } : {}),
+      body: JSON.stringify(token ? { refreshToken: token } : {}),
     });
   },
 

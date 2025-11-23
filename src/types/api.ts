@@ -420,3 +420,39 @@ export interface UpdateProjectRequest {
   metaTitle?: string;
   metaDescription?: string;
 }
+
+export interface Image {
+  externalId: string;
+  publicId: string;
+  secureUrl?: string;
+  url?: string;
+  filename: string;
+  size: number;
+  mimetype: string;
+  width?: number;
+  height?: number;
+}
+
+export interface ImageUploadResponse {
+  image: Image;
+}
+
+export interface ImageQuery {
+  page?: number;
+  limit?: number;
+  uploader?: string;
+  format?: string;
+  mimetype?: string;
+}
+
+export type EntityType = 'USER' | 'PROJECT' | 'BLOG' | string;
+
+export interface ImageAttachment {
+  id: string;
+  imageExternalId: string;
+  entityType: EntityType;
+  entityId: string;
+  role?: string;
+  order?: number;
+  createdAt?: string;
+}

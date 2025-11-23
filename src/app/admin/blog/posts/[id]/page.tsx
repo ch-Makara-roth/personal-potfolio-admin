@@ -44,6 +44,12 @@ export default function AdminBlogPostDetailPage({
   const deleteComment = useDeleteComment();
   const comments = (commentsData as any)?.data ?? [];
 
+  const sanitizeImageUrl = (s: string) =>
+    String(s || '')
+      .replace(/[`]/g, '')
+      .replace(/\)$/g, '')
+      .trim();
+
   const onDeletePost = () => {
     if (!post?.id) return;
     setShowPostDeleteConfirm(true);
@@ -150,7 +156,7 @@ export default function AdminBlogPostDetailPage({
             {post.imageUrl && (
               <div className="relative w-full h-64">
                 <Image
-                  src={post.imageUrl}
+                  src={sanitizeImageUrl(post.imageUrl)}
                   alt={post.title}
                   fill
                   unoptimized

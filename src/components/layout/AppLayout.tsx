@@ -99,9 +99,7 @@ export function AppLayout({
     : 'transition-all duration-300 ease-in-out';
 
   return (
-    // Use a two-row grid: header (auto) + content (1fr) so only the content row consumes
-    // the viewport height and becomes scrollable internally.
-    <div className="h-screen bg-gray-50 safe-area-inset grid grid-rows-[auto,1fr]">
+    <div className="min-h-screen bg-gray-50/50 dark:bg-gray-950 safe-area-inset">
       {/* Skip Links - These will be added by the useSkipLinks hook */}
 
       {/* Header */}
@@ -109,67 +107,53 @@ export function AppLayout({
         <Header onMenuClick={toggleSidebar} />
       </div>
 
-      {/* Content row: sidebar + main area. Prevent page-level scroll with overflow-hidden */}
-      <div className="flex h-full min-h-0 overflow-hidden">
-        {/* Sidebar */}
-        <div id={sidebarId}>
-          <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-        </div>
-
-        {/* Mobile Sidebar Overlay */}
-        {!sidebarCollapsed && (isMobile || isTablet) && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
-            onClick={toggleSidebar}
-            onTouchEnd={toggleSidebar}
-            aria-hidden="true"
-            role="presentation"
-          />
-        )}
-
-        {/* Main Content Area */}
-        <main
-          id={mainContentId}
-          className={`
-            flex-1 ${transitionClasses}
-            ${sidebarCollapsed ? 'lg:ml-0' : ''} h-full min-h-0 min-w-0 overflow-hidden flex flex-col
-            focus:outline-none
-            pt-18 ${isMobile ? 'pb-safe-area-bottom' : ''}
-          `}
-          role="main"
-          aria-label="Main content"
-          tabIndex={-1}
-        >
-          {/* Content wrapper with responsive spacing */}
-          <div
-            className={cn(
-              `p-4 md:p-6 xl:p-8 pt-0 h-full min-h-0 w-full flex flex-col`,
-              contentContainerClassName
-            )}
-          >
-            {/* Landmark for screen readers */}
-            <div className="sr-only">
-              <h1>Main Content Area</h1>
-              <p>
-                {isMobile
-                  ? 'Tap menu button to open navigation, swipe to close sidebar overlay'
-                  : 'Use Alt+M to toggle navigation sidebar, Alt+1 to focus main content'}
-              </p>
-            </div>
-
-            {/* Scroll only inside children container */}
-            <div
-              className={
-                isMobile
-                  ? 'space-y-4 flex-1 min-h-0 overflow-y-auto'
-                  : 'space-y-6 flex-1 min-h-0 overflow-y-auto'
-              }
-            >
-              {children}
-            </div>
-          </div>
-        </main>
+      {/* Sidebar */}
+      <div id={sidebarId}>
+        <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
       </div>
+
+      {/* Mobile Sidebar Overlay */}
+      {!sidebarCollapsed && (isMobile || isTablet) && (
+        <div
+          className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-30 lg:hidden"
+          onClick={toggleSidebar}
+          onTouchEnd={toggleSidebar}
+          aria-hidden="true"
+          role="presentation"
+        />
+      )}
+
+      {/* Main Content Area */}
+      <main
+        id={mainContentId}
+        className={cn(
+          'flex-1 min-h-screen pt-16 transition-all duration-300 ease-in-out',
+          sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72'
+        )}
+        role="main"
+        aria-label="Main content"
+        tabIndex={-1}
+      >
+        {/* Content wrapper with responsive spacing */}
+        <div
+          className={cn(
+            'p-4 md:p-6 xl:p-8 w-full max-w-[1600px] mx-auto',
+            contentContainerClassName
+          )}
+        >
+          {/* Landmark for screen readers */}
+          <div className="sr-only">
+            <h1>Main Content Area</h1>
+            <p>
+              {isMobile
+                ? 'Tap menu button to open navigation, swipe to close sidebar overlay'
+                : 'Use Alt+M to toggle navigation sidebar, Alt+1 to focus main content'}
+            </p>
+          </div>
+
+          <div className="space-y-6">{children}</div>
+        </div>
+      </main>
 
       {/* Live region for announcements - managed by accessibility hooks */}
       <div

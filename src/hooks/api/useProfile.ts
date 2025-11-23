@@ -18,7 +18,27 @@ export const authKeys = {
 export const useProfile = () => {
   return useQuery({
     queryKey: authKeys.profile(),
-    queryFn: async (): Promise<ApiResponse<AuthUser>> => authApi.getProfile(),
+    queryFn: async (): Promise<ApiResponse<AuthUser>> => {
+      const resp = await authApi.getProfile();
+      const raw: any = resp?.data;
+      const user: any = raw?.user ?? raw?.profile?.user ?? raw;
+      const normalized: AuthUser = {
+        id: user?.id,
+        email: user?.email,
+        username: user?.username,
+        firstName: user?.firstName ?? user?.firstname,
+        lastName: user?.lastName ?? user?.lastname,
+        role: user?.role,
+        isActive: user?.isActive ?? user?.active,
+        avatar: user?.avatar ?? user?.avatarUrl ?? user?.imageUrl ?? null,
+        bio: user?.bio ?? null,
+        website: user?.website ?? null,
+        location: user?.location ?? null,
+        createdAt: user?.createdAt ?? user?.created_at,
+        updatedAt: user?.updatedAt ?? user?.updated_at,
+      } as AuthUser;
+      return { ...resp, data: normalized };
+    },
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 };
