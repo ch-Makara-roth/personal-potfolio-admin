@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { AuthTokens, AuthUser } from '@/types/api';
+import { refreshSession } from '@/lib/api/auth-api';
 
 // Utility: decode JWT and get expiration timestamp (seconds)
 function getJwtExp(token?: string | null): number | null {
@@ -25,72 +26,128 @@ interface AuthState {
   updateTokens: (tokens: AuthTokens) => void;
   clearSession: () => void;
   isAccessTokenExpired: () => boolean;
+  refreshTokens: () => Promise<AuthTokens | null>;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       tokens: null,
       isAuthenticated: false,
       hasHydrated: false,
 
-      setSession: (user, tokens) =>
+      setSession: (user, tokens) => {
         set({
           user,
-          // Do not persist refreshToken for security. It will be available in-memory only
           tokens,
           isAuthenticated: Boolean(tokens?.accessToken),
-        }),
+        });
+        scheduleAutoRefresh();
+      },
 
-      updateTokens: (tokens) =>
+      updateTokens: (tokens) => {
         set((state) => ({
           tokens,
           isAuthenticated: Boolean(tokens?.accessToken),
           user: state.user,
-        })),
+        }));
+        scheduleAutoRefresh();
+      },
 
-      clearSession: () =>
-        set({ user: null, tokens: null, isAuthenticated: false }),
+      clearSession: () => {
+        set({ user: null, tokens: null, isAuthenticated: false });
+        if (refreshTimer) {
+          window.clearTimeout(refreshTimer);
+          refreshTimer = null;
+        }
+      },
 
       isAccessTokenExpired: () => {
-        const token = useAuthStore.getState().tokens?.accessToken || null;
+        const token = get().tokens?.accessToken || null;
         const exp = getJwtExp(token);
         if (!exp) return false; // if exp missing, treat as not expired and rely on server validation
         const nowSec = Math.floor(Date.now() / 1000);
         return exp <= nowSec;
       },
+
+      refreshTokens: async () => {
+        const refreshToken = get().tokens?.refreshToken;
+        const newTokens = await refreshSession(refreshToken);
+
+        if (newTokens) {
+          get().updateTokens(newTokens);
+          return newTokens;
+        } else {
+          get().clearSession();
+          return null;
+        }
+      },
     }),
     {
       name: 'auth-store',
       storage: createJSONStorage(() => localStorage),
-      // Persist only necessary fields
       partialize: (state) => ({
         user: state.user,
-        // Sanitize tokens: never persist refreshToken
         tokens: state.tokens
           ? {
               accessToken: state.tokens.accessToken,
+              refreshToken: state.tokens.refreshToken,
               expiresIn: state.tokens.expiresIn,
             }
           : null,
         isAuthenticated: state.isAuthenticated,
       }),
-      // Mark store as hydrated after persistence rehydrates
       onRehydrateStorage: () => {
-        return (state, error) => {
-          // Even if error, mark hydrated to avoid permanent redirect loops
+        return (state) => {
           useAuthStore.setState({ hasHydrated: true });
+          if (state?.tokens?.accessToken) {
+            scheduleAutoRefresh();
+          }
         };
       },
     }
   )
 );
 
+let refreshTimer: number | null = null;
+let refreshPromise: Promise<AuthTokens | null> | null = null;
+
+// Exposed for the API client to trigger refresh
+export async function refreshAccessToken(): Promise<AuthTokens | null> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = useAuthStore
+    .getState()
+    .refreshTokens()
+    .finally(() => {
+      refreshPromise = null;
+    });
+
+  return refreshPromise;
+}
+
+function scheduleAutoRefresh() {
+  try {
+    const token = useAuthStore.getState().tokens?.accessToken || null;
+    const exp = getJwtExp(token);
+    if (!exp) return;
+
+    const nowMs = Date.now();
+    const refreshAtMs = exp * 1000 - 60000; // Refresh 1 minute before expiry
+    const delay = Math.max(refreshAtMs - nowMs, 5000); // Minimum 5s delay
+
+    if (refreshTimer) window.clearTimeout(refreshTimer);
+
+    refreshTimer = window.setTimeout(async () => {
+      await refreshAccessToken();
+    }, delay);
+  } catch {}
+}
+
 export const getAccessToken = () => {
   if (typeof window === 'undefined') return null;
   try {
-    // Prefer in-memory store to avoid stale localStorage
     const inMemory = useAuthStore.getState().tokens?.accessToken ?? null;
     if (inMemory) return inMemory;
     const raw = localStorage.getItem('auth-store');
@@ -103,10 +160,14 @@ export const getAccessToken = () => {
 };
 
 export const getRefreshToken = () => {
-  // Refresh token should NOT be stored in localStorage.
-  // Return from in-memory store if present; otherwise null.
   try {
-    return useAuthStore.getState().tokens?.refreshToken ?? null;
+    const inMemory = useAuthStore.getState().tokens?.refreshToken ?? null;
+    if (inMemory) return inMemory;
+    if (typeof window === 'undefined') return null;
+    const raw = localStorage.getItem('auth-store');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.state?.tokens?.refreshToken ?? null;
   } catch {
     return null;
   }

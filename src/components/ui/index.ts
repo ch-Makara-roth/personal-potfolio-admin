@@ -28,3 +28,4 @@ export {
 } from './Skeleton';
 export { DataTable } from './DataTable';
 export { FormBuilder } from './FormBuilder';
+export { Input } from './Input';

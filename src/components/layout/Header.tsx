@@ -1,7 +1,15 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Menu, Bell, ChevronDown, Sun, Moon, Laptop } from 'lucide-react';
+import {
+  Menu,
+  Bell,
+  ChevronDown,
+  Sun,
+  Moon,
+  Laptop,
+  Search,
+} from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '../ui/Badge';
 import { Avatar } from '../ui/Avatar';
@@ -17,6 +25,7 @@ import { useThemeState, useUIStore, useAuthStore } from '@/stores';
 import { authApi } from '@/lib/api/auth';
 import { useRouter } from 'next/navigation';
 import type { AuthUser } from '@/types/api';
+import { cn } from '@/utils/cn';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -167,91 +176,74 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm"
+      className={cn(
+        'fixed top-0 left-0 right-0 z-30 h-16',
+        'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-800/50',
+        'transition-all duration-200'
+      )}
       role="banner"
     >
-      <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+      <div className="flex items-center justify-between h-full px-4 lg:px-6 max-w-[1920px] mx-auto">
         {/* Left Section - Logo and Menu */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-4">
           {/* Mobile Menu Button */}
           <button
             onClick={onMenuClick}
-            className="p-2 rounded-lg hover:bg-gray-100 lg:hidden transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
             aria-label="Toggle navigation sidebar"
             aria-expanded="false"
             aria-controls="sidebar-navigation"
           >
-            <Menu className="w-5 h-5 text-gray-600" aria-hidden="true" />
+            <Menu
+              className="w-5 h-5 text-gray-600 dark:text-gray-400"
+              aria-hidden="true"
+            />
           </button>
 
-          {/* Logo and Title */}
-          <div
-            className="flex items-center space-x-3"
-            role="img"
-            aria-labelledby={logoId}
-          >
-            {/* Blue Crescent Moon Icon */}
-            <div
-              className={`w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center ${
-                isHighContrast ? 'border-2 border-solid border-current' : ''
-              }`}
-              aria-hidden="true"
-            >
-              <div className="w-5 h-5 bg-white rounded-full relative">
-                <div className="absolute top-1 left-1 w-3 h-3 bg-blue-500 rounded-full"></div>
-              </div>
-            </div>
-
-            {/* CONSULT Title */}
-            <h1
-              id={logoId}
-              className="text-xl font-bold text-gray-900 hidden sm:block"
-            >
-              CONSULT
-            </h1>
+          {/* Search Bar (Optional placeholder for future) */}
+          <div className="hidden md:flex items-center px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg border border-transparent focus-within:border-purple-500 focus-within:ring-1 focus-within:ring-purple-500 transition-all w-64">
+            <Search className="w-4 h-4 text-gray-400 mr-2" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="bg-transparent border-none focus:outline-none text-sm text-gray-900 dark:text-gray-100 w-full placeholder-gray-500"
+            />
           </div>
         </div>
 
         {/* Right Section - Plan Badge, Notifications, User */}
         <div
-          className="flex items-center space-x-4"
+          className="flex items-center gap-2 sm:gap-4"
           role="toolbar"
           aria-label="User actions"
         >
           {/* Free Plan Badge */}
           <Badge
-            variant="secondary"
-            className="hidden sm:flex"
+            variant="outline"
+            className="hidden sm:flex border-purple-200 text-purple-700 bg-purple-50 dark:bg-purple-900/20 dark:border-purple-800 dark:text-purple-300"
             role="status"
             aria-label="Current plan: Free"
           >
             Free Plan
           </Badge>
 
+          <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
+
           {/* Theme Toggle */}
           <button
             onClick={cycleTheme}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400"
             aria-label={`Switch theme (current: ${theme})`}
             title={`Theme: ${theme}`}
           >
             {theme === 'light' && (
-              <Sun
-                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                aria-hidden="true"
-              />
+              <Sun className="w-5 h-5" aria-hidden="true" />
             )}
             {theme === 'dark' && (
-              <Moon
-                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                aria-hidden="true"
-              />
+              <Moon className="w-5 h-5" aria-hidden="true" />
             )}
             {theme === 'system' && (
-              <Laptop
-                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                aria-hidden="true"
-              />
+              <Laptop className="w-5 h-5" aria-hidden="true" />
             )}
           </button>
 
@@ -260,7 +252,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             <button
               ref={notificationButtonRef}
               onClick={handleNotificationClick}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors relative focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative text-gray-500 dark:text-gray-400"
               aria-label={
                 notificationCount > 0
                   ? `Notifications (${notificationCount} unread)`
@@ -268,32 +260,22 @@ export function Header({ onMenuClick }: HeaderProps) {
               }
               aria-describedby={notificationId}
             >
-              <Bell
-                className="w-5 h-5 text-gray-600 dark:text-gray-300"
-                aria-hidden="true"
-              />
+              <Bell className="w-5 h-5" aria-hidden="true" />
               {notificationCount > 0 && (
                 <span
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-purple-600 text-white text-xs rounded-full flex items-center justify-center"
+                  className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-900"
                   aria-hidden="true"
-                >
-                  {notificationCount > 9 ? '9+' : notificationCount}
-                </span>
+                />
               )}
             </button>
-            <div id={notificationId} className="sr-only">
-              {notificationCount > 0
-                ? `You have ${notificationCount} unread notifications`
-                : 'No unread notifications'}
-            </div>
           </div>
 
           {/* User Avatar and Dropdown */}
-          <div className="relative" ref={focusTrapRef}>
+          <div className="relative ml-2" ref={focusTrapRef}>
             <button
               ref={menuButtonRef}
               onClick={toggleUserMenu}
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              className="flex items-center gap-2 p-1 pr-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
               aria-label="User account menu"
               aria-expanded={showUserMenu}
               aria-haspopup="menu"
@@ -305,11 +287,13 @@ export function Header({ onMenuClick }: HeaderProps) {
                 alt="User Avatar"
                 fallback={avatarFallback}
                 size="sm"
+                className="ring-2 ring-white dark:ring-gray-900"
               />
               <ChevronDown
-                className={`w-4 h-4 text-gray-500 hidden sm:block transition-transform ${
-                  showUserMenu ? 'rotate-180' : ''
-                }`}
+                className={cn(
+                  'w-4 h-4 text-gray-500 transition-transform duration-200',
+                  showUserMenu && 'rotate-180'
+                )}
                 aria-hidden="true"
               />
             </button>
@@ -318,46 +302,45 @@ export function Header({ onMenuClick }: HeaderProps) {
             {showUserMenu && (
               <div
                 id={menuId}
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-40 ${
-                  isHighContrast ? 'border-2 border-solid border-current' : ''
-                }`}
+                className={cn(
+                  'absolute right-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 py-2 z-50 transform origin-top-right transition-all',
+                  'animate-in fade-in zoom-in-95 duration-200',
+                  isHighContrast && 'border-2 border-solid border-current'
+                )}
                 role="menu"
                 aria-labelledby="user-menu-button"
               >
-                <div className="px-4 py-2 border-b border-gray-100" role="none">
-                  <p className="text-sm font-medium text-gray-900">
+                <div
+                  className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 mx-2 rounded-lg mb-2"
+                  role="none"
+                >
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     {displayName}
                   </p>
-                  <p className="text-xs text-gray-500">{displayEmail}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {displayEmail}
+                  </p>
                 </div>
-                <Link
-                  href="/admin/profile/settings"
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors focus:bg-gray-50 focus:outline-none"
-                  role="menuitem"
+
+                <div className="px-2 space-y-1">
+                  <Link
+                    href="/admin/profile/settings"
+                    className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    role="menuitem"
+                  >
+                    Profile Settings
+                  </Link>
+                  {/* Add more menu items here if needed */}
+                </div>
+
+                <div
+                  className="border-t border-gray-100 dark:border-gray-800 mt-2 pt-2 px-2"
+                  role="none"
                 >
-                  Profile Settings
-                </Link>
-                {/* <button
-                  type="button"
-                  onClick={() => router.push('/settings')}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors focus:bg-gray-50 focus:outline-none"
-                  role="menuitem"
-                >
-                  Account Settings
-                </button> */}
-                {/* <button
-                  type="button"
-                  onClick={() => router.push('/settings')}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors focus:bg-gray-50 focus:outline-none"
-                  role="menuitem"
-                >
-                  Billing
-                </button> */}
-                <div className="border-t border-gray-100 mt-2 pt-2" role="none">
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors focus:bg-gray-50 focus:outline-none"
+                    className="flex items-center w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                     role="menuitem"
                   >
                     Sign Out

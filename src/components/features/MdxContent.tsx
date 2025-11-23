@@ -36,7 +36,9 @@ export function MdxContent({
       }
       try {
         setError(null);
-        const mod = await evaluate(input, {
+        const sanitized = stripMdxEsm(input);
+        const preprocessed = preprocessHighlight(sanitized);
+        const mod = await evaluate(preprocessed, {
           ...mdxRuntime,
           remarkPlugins: [remarkGfm],
         } as any);
@@ -66,6 +68,26 @@ export function MdxContent({
   }
   const Content = Comp;
   return <Content components={components as any} />;
+}
+
+function preprocessHighlight(input: string): string {
+  // Avoid replacing inside fenced code blocks
+  const parts = input.split(/(```[\s\S]*?```)/g);
+  return parts
+    .map((segment, idx) => {
+      // Even indices are outside code fences
+      if (segment.startsWith('```')) return segment;
+      // Replace ==text== with <mark>text</mark>
+      return segment.replace(/==([^=]+?)==/g, '<mark>$1</mark>');
+    })
+    .join('');
+}
+
+function stripMdxEsm(input: string): string {
+  return input
+    .split('\n')
+    .filter((l) => !/^\s*(import|export)\b/.test(l))
+    .join('\n');
 }
 
 export default MdxContent;

@@ -15,6 +15,8 @@ import {
   MessageSquare,
   Mail,
   BarChart3,
+  ChevronRight,
+  LogOut,
 } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import {
@@ -24,6 +26,7 @@ import {
   useRovingTabIndex,
   useHighContrast,
 } from '@/hooks/useAccessibility';
+import { cn } from '@/utils/cn';
 
 interface NavigationItem {
   id: string;
@@ -65,13 +68,6 @@ const navigationGroups: NavigationGroup[] = [
     id: 'management',
     label: 'Management',
     items: [
-      // {
-      //   id: 'services',
-      //   label: 'Services',
-      //   icon: Briefcase,
-      //   href: '/services',
-      //   description: 'Service offerings and management',
-      // },
       {
         id: 'projects',
         label: 'Projects',
@@ -79,13 +75,6 @@ const navigationGroups: NavigationGroup[] = [
         href: '/projects',
         description: 'Project management and tracking',
       },
-      // {
-      //   id: 'clients',
-      //   label: 'Clients',
-      //   icon: UserCheck,
-      //   href: '/clients',
-      //   description: 'Client management and relationships',
-      // },
     ],
   },
   {
@@ -218,25 +207,44 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       <aside
         ref={sidebarRef}
         id={sidebarId}
-        className={`
-          fixed top-16 left-0 z-30 h-[calc(100vh-4rem)] bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800
-          transition-transform duration-300 ease-in-out
-          ${collapsed ? '-translate-x-full lg:translate-x-0 lg:w-0' : 'translate-x-0 w-64'}
-          lg:static lg:top-0 lg:h-screen lg:pt-16
-          ${isHighContrast ? 'border-2 border-solid border-current' : ''}
-        `}
+        className={cn(
+          'fixed top-0 left-0 z-40 h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ease-in-out shadow-sm',
+          collapsed
+            ? '-translate-x-full lg:translate-x-0 lg:w-20'
+            : 'translate-x-0 w-72',
+          isHighContrast && 'border-2 border-solid border-current'
+        )}
         role="navigation"
         aria-label="Main navigation"
         aria-hidden={collapsed}
       >
         <div className="flex flex-col h-full">
-          {/* Mobile Close Button */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800 lg:hidden">
-            <h2 className="text-lg font-semibold text-gray-900">Navigation</h2>
+          {/* Logo Section */}
+          <div
+            className={cn(
+              'flex items-center h-16 px-6 border-b border-gray-100 dark:border-gray-800',
+              collapsed ? 'justify-center px-0' : 'justify-between'
+            )}
+          >
+            {!collapsed && (
+              <div className="flex items-center gap-2 font-bold text-xl text-gray-900 dark:text-white">
+                <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white">
+                  C
+                </div>
+                <span>CONSULT</span>
+              </div>
+            )}
+            {collapsed && (
+              <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold">
+                C
+              </div>
+            )}
+
+            {/* Mobile Close Button */}
             <button
               ref={closeButtonRef}
               onClick={onToggle}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
               aria-label="Close navigation sidebar"
             >
               <X className="w-5 h-5 text-gray-600" aria-hidden="true" />
@@ -246,19 +254,21 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           {/* Navigation Groups */}
           <nav
             id={navId}
-            className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6"
+            className="flex-1 min-h-0 overflow-y-auto py-6 px-3 space-y-6"
             aria-label="Main navigation menu"
           >
             {navigationGroups.map((group) => (
               <div key={group.id} aria-labelledby={`${group.id}-label`}>
-                <h3
-                  id={`${group.id}-label`}
-                  className="px-3 pt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                >
-                  {group.label}
-                </h3>
+                {!collapsed && (
+                  <h3
+                    id={`${group.id}-label`}
+                    className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider"
+                  >
+                    {group.label}
+                  </h3>
+                )}
 
-                <ul role="list" className="mt-2 space-y-2">
+                <ul role="list" className="space-y-1">
                   {group.items.map((item) => {
                     const Icon = item.icon;
                     const index = itemIndexMap.get(item.id) ?? 0;
@@ -276,47 +286,53 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                           onClick={() => handleNavItemClick(item)}
                           onKeyDown={(e) => handleNavItemKeyDown(e, index)}
                           tabIndex={tabIndex}
-                          className={`
-                            flex items-center justify-between px-3 py-3 sm:py-2.5 rounded-lg transition-all duration-200
-                            group hover:bg-blue-50 dark:hover:bg-gray-800 focus:bg-blue-50 dark:focus:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
-                            ${
-                              isActive
-                                ? 'bg-purple-50 dark:bg-gray-800 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-gray-700'
-                                : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                            }
-                            ${isHighContrast && isActive ? 'border-2 border-solid border-current' : ''}
-                          `}
+                          className={cn(
+                            'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative',
+                            'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
+                            isActive
+                              ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 font-medium'
+                              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200',
+                            isHighContrast &&
+                              isActive &&
+                              'border-2 border-solid border-current',
+                            collapsed && 'justify-center px-2'
+                          )}
                           aria-current={isActive ? 'page' : undefined}
                           aria-describedby={
                             item.description ? `${item.id}-desc` : undefined
                           }
                           prefetch
+                          title={collapsed ? item.label : undefined}
                         >
-                          <div className="flex items-center space-x-3">
-                            <Icon
-                              className={`
-                                w-5 h-5 transition-colors duration-200
-                                ${
-                                  isActive
-                                    ? 'text-purple-600 dark:text-purple-400'
-                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400'
-                                }
-                              `}
-                              aria-hidden="true"
-                            />
-                            <span className="font-medium text-sm">
-                              {item.label}
-                            </span>
-                          </div>
+                          <Icon
+                            className={cn(
+                              'w-5 h-5 transition-colors',
+                              isActive
+                                ? 'text-purple-600 dark:text-purple-400'
+                                : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+                            )}
+                            aria-hidden="true"
+                          />
 
-                          {item.badge && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 group-hover:bg-blue-100 dark:group-hover:bg-gray-700 group-hover:text-blue-700 dark:group-hover:text-blue-400"
-                              aria-label={`${item.badge.toLocaleString()} items`}
-                            >
-                              {item.badge.toLocaleString()}
-                            </Badge>
+                          {!collapsed && (
+                            <>
+                              <span className="flex-1 truncate">
+                                {item.label}
+                              </span>
+                              {item.badge && (
+                                <Badge
+                                  variant="secondary"
+                                  className="ml-auto text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+                                >
+                                  {item.badge}
+                                </Badge>
+                              )}
+                            </>
+                          )}
+
+                          {/* Active Indicator Strip for Collapsed State */}
+                          {collapsed && isActive && (
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-purple-600 rounded-r-full" />
                           )}
 
                           {item.description && (
@@ -333,11 +349,17 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
             ))}
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200" role="contentinfo">
-            <div className="text-xs text-gray-500 text-center">
-              © 2024 CONSULT
-            </div>
+          {/* Footer User/Logout Section */}
+          <div className="p-4 border-t border-gray-100 dark:border-gray-800">
+            {!collapsed ? (
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-gray-500">© 2024 CONSULT</div>
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700" />
+              </div>
+            )}
           </div>
         </div>
       </aside>

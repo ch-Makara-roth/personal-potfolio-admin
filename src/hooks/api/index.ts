@@ -81,3 +81,11 @@ export {
   useDeleteProject,
   projectKeys,
 } from './useProjects';
+
+export {
+  useUploadImage,
+  useCreateAttachment,
+  useListAttachments,
+  useDeleteAttachment,
+  uploadKeys,
+} from './useUploads';

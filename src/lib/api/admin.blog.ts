@@ -36,29 +36,44 @@ export const adminBlogApi = {
 
     // 1) If looks like a slug, try search strategies
     if (!isUuid) {
-      // Try searching by slug directly
-      const direct = await runSearch(idOrSlug, 50);
-      let bySlug = direct.items.find((p: any) => p?.slug === idOrSlug);
+      // Convert slug to spaced words for better search results
+      // e.g. "my-post-title" -> "my post title"
+      const spaced = idOrSlug.replace(/-/g, ' ');
 
-      if (!bySlug) {
-        // Some backends search titles only; convert slug to spaced words and try again
-        const spaced = idOrSlug.replace(/-/g, ' ');
-        const byTitleQuery = await runSearch(spaced, 50);
-        // Prefer exact slug match if present, otherwise try exact title match
-        bySlug = byTitleQuery.items.find((p: any) => p?.slug === idOrSlug);
-        if (!bySlug) {
-          const normalizedTitle = spaced.toLowerCase();
-          const byTitle = byTitleQuery.items.find(
-            (p: any) => (p?.title ?? '').toLowerCase() === normalizedTitle
-          );
-          if (byTitle) {
-            return wrap(byTitle);
-          }
+      // Try searching by the spaced title first (more likely to succeed)
+      const searchResult = await runSearch(spaced, 50);
+
+      // Try to find an exact slug match first
+      let found = searchResult.items.find((p: any) => p?.slug === idOrSlug);
+
+      if (!found) {
+        // If no slug match, try to find by title
+        const normalizedQuery = spaced.toLowerCase();
+        found = searchResult.items.find(
+          (p: any) => (p?.title ?? '').toLowerCase() === normalizedQuery
+        );
+      }
+
+      // If still not found, and we have results, maybe the first one is it?
+      // This is a heuristic: if we searched for the exact slug-as-words,
+      // the top result is highly likely to be the post.
+      if (!found && searchResult.items.length > 0) {
+        // Check if the slug contains the query or vice versa to be safer
+        const first = searchResult.items[0];
+        const firstSlug = (first.slug ?? '').toLowerCase();
+        const firstTitle = (first.title ?? '').toLowerCase();
+        if (
+          firstSlug.includes(idOrSlug) ||
+          idOrSlug.includes(firstSlug) ||
+          firstTitle.includes(spaced) ||
+          spaced.includes(firstTitle)
+        ) {
+          found = first;
         }
       }
 
-      if (bySlug) {
-        return wrap(bySlug);
+      if (found) {
+        return wrap(found);
       }
     }
 
