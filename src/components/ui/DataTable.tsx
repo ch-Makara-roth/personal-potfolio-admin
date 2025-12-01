@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/utils/cn';
 import { MoreHorizontal } from 'lucide-react';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export type DataTableColumn<T> = {
   key: string;
@@ -74,14 +75,14 @@ export function DataTable<T>({
     return (
       <Card className={cn('overflow-visible w-full', className)}>
         <div className="p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-1/4" />
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex space-x-4">
-                <div className="h-4 bg-gray-200 rounded flex-1"></div>
-                <div className="h-4 bg-gray-200 rounded w-24"></div>
-                <div className="h-4 bg-gray-200 rounded w-48"></div>
-                <div className="h-4 bg-gray-200 rounded w-8"></div>
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-4 w-8" />
               </div>
             ))}
           </div>
@@ -120,7 +121,7 @@ export function DataTable<T>({
                 (() => {
                   const rect = buttonRef.current!.getBoundingClientRect();
                   const baseClasses =
-                    'z-50 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1';
+                    'z-50 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800 py-1';
                   const style: React.CSSProperties = {
                     position: 'fixed',
                     left: rect.right,
@@ -139,9 +140,9 @@ export function DataTable<T>({
                               it.onClick(row);
                             }}
                             className={cn(
-                              'w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors',
+                              'w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300',
                               it.variant === 'destructive' &&
-                                'text-red-600 hover:bg-red-50'
+                                'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
                             )}
                           >
                             {Icon && <Icon className="w-4 h-4" />}
@@ -158,7 +159,7 @@ export function DataTable<T>({
               // Fallback (SSR) - keep relative absolute menu
               <div
                 className={cn(
-                  'absolute right-0 z-50 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1',
+                  'absolute right-0 z-50 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800 py-1',
                   up ? 'bottom-full mb-1' : 'top-full mt-1'
                 )}
               >
@@ -172,9 +173,9 @@ export function DataTable<T>({
                         it.onClick(row);
                       }}
                       className={cn(
-                        'w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors',
+                        'w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300',
                         it.variant === 'destructive' &&
-                          'text-red-600 hover:bg-red-50'
+                          'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
                       )}
                     >
                       {Icon && <Icon className="w-4 h-4" />}
@@ -195,14 +196,14 @@ export function DataTable<T>({
       {/* Desktop table */}
       <div className="hidden md:block">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+            <thead className="bg-gray-50 dark:bg-gray-800/50">
               <tr>
                 {columns.map((col) => (
                   <th
                     key={col.key}
                     className={cn(
-                      'px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider',
+                      'px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider',
                       col.align === 'center' && 'text-center',
                       col.align === 'right' && 'text-right',
                       col.width
@@ -212,20 +213,23 @@ export function DataTable<T>({
                   </th>
                 ))}
                 {actions && (
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Actions
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
               {rows.map((row) => (
-                <tr key={getRowId(row)} className="hover:bg-gray-50">
+                <tr
+                  key={getRowId(row)}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                >
                   {columns.map((col) => (
                     <td
                       key={col.key}
                       className={cn(
-                        'px-4 py-3 text-sm',
+                        'px-4 py-3 text-sm text-gray-900 dark:text-gray-100',
                         col.align === 'center' && 'text-center',
                         col.align === 'right' && 'text-right'
                       )}
@@ -254,8 +258,8 @@ export function DataTable<T>({
           </table>
         </div>
         {pagination && (
-          <div className="flex items-center justify-between p-4 border-t">
-            <div className="text-sm text-gray-600">
+          <div className="flex items-center justify-between p-4 border-t border-gray-200 dark:border-gray-800">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               Page {pagination.page} of{' '}
               {Math.max(
                 1,
@@ -292,8 +296,10 @@ export function DataTable<T>({
               <div className="space-y-2">
                 {columns.map((col) => (
                   <div key={col.key}>
-                    <div className="text-xs text-gray-500">{col.label}</div>
-                    <div className="text-sm text-gray-900">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {col.label}
+                    </div>
+                    <div className="text-sm text-gray-900 dark:text-gray-100">
                       {col.render(row)}
                     </div>
                   </div>

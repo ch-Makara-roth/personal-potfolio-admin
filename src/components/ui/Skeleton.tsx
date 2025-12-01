@@ -8,7 +8,10 @@ interface SkeletonProps {
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => {
   return (
     <div
-      className={cn('animate-pulse bg-gray-200 rounded', className)}
+      className={cn(
+        'animate-pulse bg-gray-200 dark:bg-gray-700 rounded',
+        className
+      )}
       aria-hidden="true"
     />
   );
@@ -16,7 +19,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className }) => {
 
 export const StatsCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <Skeleton className="h-4 w-24 mb-3" />
@@ -30,7 +33,7 @@ export const StatsCardSkeleton: React.FC = () => {
 
 export const HiringAnalyticsSkeleton: React.FC = () => {
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
       <Skeleton className="h-6 w-48 mb-6" />
       <div className="space-y-4">
         <Skeleton className="h-8 w-full" />
@@ -48,7 +51,7 @@ export const HiringAnalyticsSkeleton: React.FC = () => {
 
 export const UpgradeCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+    <div className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800">
       <div className="flex items-start gap-4">
         <Skeleton className="h-12 w-12 rounded-lg" />
         <div className="flex-1">
@@ -63,11 +66,11 @@ export const UpgradeCardSkeleton: React.FC = () => {
 
 export const JobsTableSkeleton: React.FC = () => {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-gray-200">
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-800">
         <Skeleton className="h-6 w-48" />
       </div>
-      <div className="divide-y divide-gray-200">
+      <div className="divide-y divide-gray-200 dark:divide-gray-800">
         {[...Array(5)].map((_, i) => (
           <div key={i} className="p-4 flex items-center gap-4">
             <Skeleton className="h-5 w-1/3" />
