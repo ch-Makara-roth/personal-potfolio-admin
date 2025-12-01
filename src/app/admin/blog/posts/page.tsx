@@ -10,6 +10,17 @@ import { useAdminBlogPosts, useDeleteBlogPost } from '@/hooks/api';
 import ConfirmDeleteDialog from '@/components/ui/ConfirmDeleteDialog';
 import { Search } from 'lucide-react';
 
+interface BlogPost {
+  id: string;
+  slug?: string;
+  title: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  tags?: string[];
+  readingTime?: number;
+  likes?: number;
+  views?: number;
+}
+
 export default function AdminBlogPostsPage() {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<string>('');
@@ -75,6 +86,7 @@ export default function AdminBlogPostsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search title..."
+                aria-label="Search posts by title"
                 className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
               />
             </div>
@@ -121,7 +133,7 @@ export default function AdminBlogPostsPage() {
                 </tr>
               </thead>
               <tbody>
-                {data?.data?.map((p: any) => (
+                {data?.data?.map((p: BlogPost) => (
                   <tr
                     key={p.id}
                     className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
