@@ -225,7 +225,7 @@
 @layer components {
   /* Card Components */
   .card {
-    @apply bg-white rounded-xl shadow-card border border-gray-100 backdrop-blur-glass;
+    @apply bg-white dark:bg-gray-900 rounded-xl shadow-card border border-gray-100 dark:border-gray-800 backdrop-blur-glass;
   }
 
   .card-hover {
@@ -302,23 +302,23 @@
   }
 
   .badge-primary {
-    @apply badge-base bg-purple-100 text-purple-800;
+    @apply badge-base bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300;
   }
 
   .badge-secondary {
-    @apply badge-base bg-gray-100 text-gray-800;
+    @apply badge-base bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300;
   }
 
   .badge-success {
-    @apply badge-base bg-green-100 text-green-800;
+    @apply badge-base bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300;
   }
 
   .badge-warning {
-    @apply badge-base bg-orange-100 text-orange-800;
+    @apply badge-base bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300;
   }
 
   .badge-info {
-    @apply badge-base bg-blue-100 text-blue-800;
+    @apply badge-base bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300;
   }
 
   /* Avatar Styles */

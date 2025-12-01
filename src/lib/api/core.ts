@@ -84,11 +84,11 @@ export async function baseRequest<T>(
 
       throw new ApiClientError(
         errorData.code ||
-        (response.status === 401 ? 'AUTH_REQUIRED' : 'SERVER_ERROR'),
+          (response.status === 401 ? 'AUTH_REQUIRED' : 'SERVER_ERROR'),
         errorData.message ||
-        (response.status === 401
-          ? 'Authentication required'
-          : 'Server error'),
+          (response.status === 401
+            ? 'Authentication required'
+            : 'Server error'),
         response.status,
         (errorData as any).details ?? (errorData as any).data
       );

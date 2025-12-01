@@ -123,63 +123,63 @@ export default function MarkdownEditor({
       <div className="flex flex-wrap items-center gap-2 mb-2">
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('bold')}
         >
           B
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border italic"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors italic"
           onClick={() => handleToolbar('italic')}
         >
           I
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('h1')}
         >
           H1
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('h2')}
         >
           H2
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('ul')}
         >
           • List
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('ol')}
         >
           1. List
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('code')}
         >
           Code
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('link')}
         >
           Link
         </button>
         <button
           type="button"
-          className="px-2 py-1 rounded border"
+          className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           onClick={() => handleToolbar('image')}
         >
           Image

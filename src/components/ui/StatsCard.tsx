@@ -9,14 +9,16 @@ import {
 } from '@/hooks/useAccessibility';
 
 const statsCardVariants = cva(
-  'relative overflow-hidden rounded-xl bg-white border transition-all duration-200 hover:shadow-card-hover',
+  'relative overflow-hidden rounded-xl bg-white dark:bg-gray-900 border transition-all duration-200 hover:shadow-card-hover',
   {
     variants: {
       variant: {
         applications:
-          'border-purple-200 bg-gradient-to-br from-purple-50 to-white',
-        interviews: 'border-blue-200 bg-gradient-to-br from-blue-50 to-white',
-        hired: 'border-cyan-200 bg-gradient-to-br from-cyan-50 to-white',
+          'border-purple-200 dark:border-purple-900/50 bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-900',
+        interviews:
+          'border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-900',
+        hired:
+          'border-cyan-200 dark:border-cyan-900/50 bg-gradient-to-br from-cyan-50 to-white dark:from-cyan-900/20 dark:to-gray-900',
       },
       size: {
         sm: 'p-4',
@@ -34,9 +36,11 @@ const statsCardVariants = cva(
 const iconVariants = cva('rounded-lg p-2', {
   variants: {
     variant: {
-      applications: 'bg-purple-100 text-purple-600',
-      interviews: 'bg-blue-100 text-blue-600',
-      hired: 'bg-cyan-100 text-cyan-600',
+      applications:
+        'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
+      interviews:
+        'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+      hired: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400',
     },
   },
 });
@@ -105,7 +109,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
       <div
         ref={ref}
         className={cn(
-          'relative overflow-hidden rounded-xl bg-white border',
+          'relative overflow-hidden rounded-xl bg-white dark:bg-gray-900 border',
           transitionClasses,
           statsCardVariants({ variant, size }),
           highContrastClasses,
@@ -120,7 +124,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
         {/* Background gradient overlay */}
         <div
           className={cn(
-            'absolute inset-0 bg-gradient-to-br from-white/50 to-transparent pointer-events-none',
+            'absolute inset-0 bg-gradient-to-br from-white/50 to-transparent dark:from-gray-800/50 pointer-events-none',
             isHighContrast && 'hidden'
           )}
           aria-hidden="true"
@@ -141,11 +145,16 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
-                <h3 id={titleId} className="text-sm font-medium text-gray-600">
+                <h3
+                  id={titleId}
+                  className="text-sm font-medium text-gray-600 dark:text-gray-400"
+                >
                   {title}
                 </h3>
                 {subtitle && (
-                  <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {subtitle}
+                  </p>
                 )}
               </div>
             </div>
@@ -155,7 +164,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
           <div className="mb-4">
             <div
               id={valueId}
-              className="text-2xl font-bold text-gray-900 mb-1"
+              className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1"
               aria-label={`Current value: ${formattedValue}`}
             >
               {formattedValue}
@@ -307,11 +316,13 @@ const TrendLine: React.FC<TrendLineProps> = ({
 
       {/* Trend indicator */}
       <div className="ml-3 text-right">
-        <div className="text-xs text-gray-500">Trend</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">Trend</div>
         <div
           className={cn(
             'text-sm font-medium',
-            trendDirection === 'increasing' ? 'text-green-600' : 'text-red-500'
+            trendDirection === 'increasing'
+              ? 'text-green-600 dark:text-green-400'
+              : 'text-red-500 dark:text-red-400'
           )}
           aria-label={trendText}
         >

@@ -101,7 +101,7 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
               href={`/projects/${p.id}`}
               aria-label="View project"
               title="View"
-              className="text-gray-600 hover:text-gray-800"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
             >
               <Eye className="w-5 h-5" />
             </Link>
@@ -113,8 +113,8 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
               disabled={!allowed}
               className={
                 allowed
-                  ? 'text-gray-600 hover:text-gray-800'
-                  : 'text-gray-300 cursor-not-allowed'
+                  ? 'text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400'
+                  : 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
               }
             >
               <Trash2 className="w-5 h-5" />
@@ -127,8 +127,8 @@ export const ProjectsTable: React.FC<ProjectsTableProps> = ({
               disabled={!allowed}
               className={
                 allowed
-                  ? 'text-gray-600 hover:text-gray-800'
-                  : 'text-gray-300 cursor-not-allowed'
+                  ? 'text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400'
+                  : 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
               }
             >
               <Edit className="w-5 h-5" />
