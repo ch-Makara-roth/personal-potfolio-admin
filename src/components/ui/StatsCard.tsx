@@ -47,7 +47,8 @@ export interface TrendData {
 }
 
 export interface StatsCardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof statsCardVariants> {
   title: string;
   value: number | string;

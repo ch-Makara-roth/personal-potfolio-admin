@@ -33,7 +33,8 @@ const chartVariants = cva(
 );
 
 export interface HiringSourcesChartProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof chartVariants> {
   data: HiringSource[];
   title?: string;

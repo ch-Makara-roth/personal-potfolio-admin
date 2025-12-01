@@ -1,8 +1,7 @@
 import { forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;

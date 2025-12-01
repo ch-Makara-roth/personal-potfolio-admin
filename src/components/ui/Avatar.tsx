@@ -18,7 +18,8 @@ const avatarVariants = cva('avatar-base', {
 });
 
 export interface AvatarProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof avatarVariants> {
   src?: string;
   alt?: string;

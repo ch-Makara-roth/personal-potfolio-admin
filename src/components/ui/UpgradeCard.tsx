@@ -26,7 +26,8 @@ const upgradeCardVariants = cva(
 );
 
 export interface UpgradeCardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof upgradeCardVariants> {
   features?: string[];
   onUpgrade?: () => void;
