@@ -30,13 +30,24 @@ export default function LoginPage() {
     try {
       const res = await authApi.login({ identifier, password });
       setSession(res.data.user, res.data.tokens);
+
+      // Set auth_token cookie for middleware
+      const { accessToken, expiresIn } = res.data.tokens;
+      // Default to 1 day if expiresIn is missing, otherwise use expiresIn (seconds)
+      const maxAge = expiresIn || 86400;
+      document.cookie = `auth_token=${accessToken}; path=/; max-age=${maxAge}; SameSite=Lax`;
+
       logAuthEvent('login_success', { userId: res.data.user.id });
       showToast({
         type: 'success',
         title: 'Welcome back!',
         message: 'Login successful',
       });
-      router.replace('/dashboard');
+
+      // Get return URL from query params or default to dashboard
+      const params = new URLSearchParams(window.location.search);
+      const from = params.get('from') || '/dashboard';
+      router.replace(from);
     } catch (err: any) {
       const message = err?.message || 'Login failed. Please try again.';
       setError(message);

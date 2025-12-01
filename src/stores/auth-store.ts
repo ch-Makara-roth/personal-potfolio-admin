@@ -53,6 +53,10 @@ export const useAuthStore = create<AuthState>()(
           user: state.user,
         }));
         scheduleAutoRefresh();
+        if (typeof document !== 'undefined' && tokens?.accessToken) {
+          const maxAge = tokens.expiresIn || 86400;
+          document.cookie = `auth_token=${tokens.accessToken}; path=/; max-age=${maxAge}; SameSite=Lax`;
+        }
       },
 
       clearSession: () => {
@@ -60,6 +64,9 @@ export const useAuthStore = create<AuthState>()(
         if (refreshTimer) {
           window.clearTimeout(refreshTimer);
           refreshTimer = null;
+        }
+        if (typeof document !== 'undefined') {
+          document.cookie = 'auth_token=; path=/; max-age=0; SameSite=Lax';
         }
       },
 
