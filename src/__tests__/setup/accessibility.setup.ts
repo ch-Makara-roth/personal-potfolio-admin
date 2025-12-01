@@ -2,12 +2,11 @@
  * Accessibility testing setup
  */
 
+import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
 
 // Configure testing library for better accessibility testing
 configure({
-  // Use getByRole as the default query method
-  defaultHidden: true,
   // Increase timeout for accessibility tests
   asyncUtilTimeout: 5000,
 });
@@ -20,10 +19,10 @@ class MockIntersectionObserver implements IntersectionObserver {
   constructor(
     _callback?: IntersectionObserverCallback,
     _options?: IntersectionObserverInit
-  ) {}
-  disconnect(): void {}
-  observe(_target: Element): void {}
-  unobserve(_target: Element): void {}
+  ) { }
+  disconnect(): void { }
+  observe(_target: Element): void { }
+  unobserve(_target: Element): void { }
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
@@ -36,10 +35,10 @@ g.IntersectionObserver = MockIntersectionObserver as any;
 
 // Mock ResizeObserver with proper typings
 class MockResizeObserver implements ResizeObserver {
-  constructor(_callback?: ResizeObserverCallback) {}
-  disconnect(): void {}
-  observe(_target: Element, _options?: ResizeObserverOptions): void {}
-  unobserve(_target: Element): void {}
+  constructor(_callback?: ResizeObserverCallback) { }
+  disconnect(): void { }
+  observe(_target: Element, _options?: ResizeObserverOptions): void { }
+  unobserve(_target: Element): void { }
 }
 
 g.ResizeObserver = MockResizeObserver as any;
