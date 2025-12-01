@@ -54,11 +54,18 @@ export async function baseRequest<T>(
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
+  // Only set Content-Type to application/json if body is NOT FormData
+  // For FormData, browser will auto-set multipart/form-data with boundary
+  const isFormData = options.body instanceof FormData;
+  const defaultHeaders: Record<string, string> = isFormData
+    ? {}
+    : { 'Content-Type': 'application/json' };
+
   const config: RequestInit = {
     ...options,
     signal: controller.signal,
     headers: {
-      'Content-Type': 'application/json',
+      ...defaultHeaders,
       ...options.headers,
     },
     // Always include credentials so cookies (e.g., refresh token) are sent
@@ -77,11 +84,11 @@ export async function baseRequest<T>(
 
       throw new ApiClientError(
         errorData.code ||
-          (response.status === 401 ? 'AUTH_REQUIRED' : 'SERVER_ERROR'),
+        (response.status === 401 ? 'AUTH_REQUIRED' : 'SERVER_ERROR'),
         errorData.message ||
-          (response.status === 401
-            ? 'Authentication required'
-            : 'Server error'),
+        (response.status === 401
+          ? 'Authentication required'
+          : 'Server error'),
         response.status,
         (errorData as any).details ?? (errorData as any).data
       );
