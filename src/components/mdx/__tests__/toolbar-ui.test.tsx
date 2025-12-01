@@ -14,6 +14,7 @@ jest.mock('@mdxeditor/editor', () => {
     }));
     return React.createElement('div', {});
   });
+  MDXEditor.displayName = 'MDXEditor';
   const Dummy = (p: any) =>
     React.createElement(
       'button',
