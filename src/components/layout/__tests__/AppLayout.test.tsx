@@ -116,7 +116,7 @@ describe('AppLayout', () => {
     expect(mainContent).toHaveClass('transition-all');
     expect(mainContent).toHaveClass('duration-300');
     expect(mainContent).toHaveClass('ease-in-out');
-    expect(mainContent).toHaveClass('pt-18');
+    expect(mainContent).toHaveClass('pt-16');
   });
 
   it('renders mobile overlay when sidebar is expanded', () => {
@@ -140,11 +140,10 @@ describe('AppLayout', () => {
     fireEvent.click(menuButton);
 
     // Should have overlay div for mobile
-    const overlay = screen.getByRole('presentation');
+    const overlay = screen.getByRole('presentation', { hidden: true });
     expect(overlay).toBeInTheDocument();
     expect(overlay).toHaveClass('fixed');
     expect(overlay).toHaveClass('inset-0');
-    expect(overlay).toHaveClass('bg-black');
-    expect(overlay).toHaveClass('bg-opacity-50');
+    expect(overlay).toHaveClass('bg-gray-900/50');
   });
 });

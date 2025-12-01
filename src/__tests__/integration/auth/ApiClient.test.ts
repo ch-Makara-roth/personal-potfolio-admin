@@ -18,7 +18,7 @@ describe('API client authentication', () => {
         status: 200,
         json: async () => ({
           success: true,
-          data: { accessToken: 'new.jwt.token', refreshToken: 'rt' },
+          data: { tokens: { accessToken: 'new.jwt.token', refreshToken: 'rt' } },
         }),
       })
       // First actual request: success
@@ -29,17 +29,21 @@ describe('API client authentication', () => {
       });
 
     // Mock auth-store: no token prior to request, expired state forces preflight
-    jest.doMock('@/stores/auth-store', () => ({
-      getAccessToken: () => null,
-      getRefreshToken: () => null,
-      useAuthStore: {
-        getState: () => ({
-          isAccessTokenExpired: () => true,
-          updateTokens: jest.fn(),
-          clearSession: jest.fn(),
-        }),
-      },
-    }));
+    jest.doMock('@/stores/auth-store', () => {
+      const original = jest.requireActual('@/stores/auth-store');
+      return {
+        ...original,
+        getAccessToken: () => null,
+        getRefreshToken: () => null,
+        useAuthStore: {
+          getState: () => ({
+            isAccessTokenExpired: () => true,
+            updateTokens: jest.fn(),
+            clearSession: jest.fn(),
+          }),
+        },
+      };
+    });
 
     const { apiRequest: api } = await import('@/lib/api/client');
     const res = await api<{ hello: string }>(`/test`, { method: 'GET' });
@@ -71,7 +75,7 @@ describe('API client authentication', () => {
         status: 200,
         json: async () => ({
           success: true,
-          data: { accessToken: 'new.jwt.token', refreshToken: 'rt' },
+          data: { tokens: { accessToken: 'new.jwt.token', refreshToken: 'rt' } },
         }),
       })
       // Retried requests succeed
@@ -87,17 +91,22 @@ describe('API client authentication', () => {
       });
 
     // Mock auth-store: token present and not expired to avoid preflight refresh
-    jest.doMock('@/stores/auth-store', () => ({
-      getAccessToken: () => 'old.jwt.token',
-      getRefreshToken: () => null,
-      useAuthStore: {
-        getState: () => ({
-          isAccessTokenExpired: () => false,
-          updateTokens: jest.fn(),
-          clearSession: jest.fn(),
-        }),
-      },
-    }));
+    jest.doMock('@/stores/auth-store', () => {
+      const original = jest.requireActual('@/stores/auth-store');
+      return {
+        ...original,
+        getAccessToken: () => 'old.jwt.token',
+        getRefreshToken: () => null,
+        useAuthStore: {
+          getState: () => ({
+            isAccessTokenExpired: () => false,
+            updateTokens: jest.fn(),
+            clearSession: jest.fn(),
+            refreshTokens: original.useAuthStore.getState().refreshTokens,
+          }),
+        },
+      };
+    });
 
     const { apiRequest: api } = await import('@/lib/api/client');
     const [res1, res2] = await Promise.all([api<any>(`/a`), api<any>(`/b`)]);

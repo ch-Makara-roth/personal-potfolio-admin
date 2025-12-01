@@ -7,12 +7,14 @@ jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: any) => {
     // eslint-disable-next-line @next/next/no-img-element
-    return React.createElement('img', { ...props });
+    const { unoptimized, fill, ...rest } = props;
+    return React.createElement('img', { ...rest });
   },
 }));
 
 describe('ImageUploadDialog', () => {
-  it('validates file type and size', async () => {
+  it('validates file type', async () => {
+    const user = userEvent.setup();
     const onDone = jest.fn();
     const onClose = jest.fn();
     render(
@@ -25,23 +27,34 @@ describe('ImageUploadDialog', () => {
     );
 
     const input = screen.getByLabelText('Select image') as HTMLInputElement;
-
     const bad = new File(['x'], 'bad.txt', { type: 'text/plain' });
     fireEvent.change(input, { target: { files: [bad] } });
-    await waitFor(() =>
-      expect(screen.getByText('Unsupported file type')).toBeInTheDocument()
+    expect(await screen.findByText('Unsupported file type')).toBeInTheDocument();
+  });
+
+  it('validates file size', async () => {
+    const user = userEvent.setup();
+    const onDone = jest.fn();
+    const onClose = jest.fn();
+    render(
+      <ImageUploadDialog
+        open
+        loading={false}
+        onDone={onDone}
+        onClose={onClose}
+        maxSizeMB={2}
+      />
     );
 
-    const large = new File([new Uint8Array(2 * 1024 * 1024 + 1)], 'a.jpg', {
-      type: 'image/jpeg',
-    });
+    const input = screen.getByLabelText('Select image') as HTMLInputElement;
+    const large = new File(['x'], 'a.jpg', { type: 'image/jpeg' });
+    Object.defineProperty(large, 'size', { value: 2 * 1024 * 1024 + 1 });
     fireEvent.change(input, { target: { files: [large] } });
-    await waitFor(() =>
-      expect(screen.getByText('Max size 2MB')).toBeInTheDocument()
-    );
+    expect(await screen.findByText('Max size 2MB')).toBeInTheDocument();
   });
 
   it('calls onDone for valid file and shows preview', async () => {
+    const user = userEvent.setup();
     const onDone = jest.fn();
     const onClose = jest.fn();
     render(
@@ -56,11 +69,11 @@ describe('ImageUploadDialog', () => {
 
     const input = screen.getByLabelText('Select image') as HTMLInputElement;
     const file = new File(['x'], 'ok.png', { type: 'image/png' });
-    await userEvent.upload(input, file);
+    fireEvent.change(input, { target: { files: [file] } });
 
     const done = screen.getByRole('button', { name: 'Done' });
-    await userEvent.click(done);
-    expect(onDone).toHaveBeenCalled();
+    await user.click(done);
+    await waitFor(() => expect(onDone).toHaveBeenCalled());
     expect(screen.getByRole('status')).toHaveTextContent('Ready');
   });
 });

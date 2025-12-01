@@ -178,7 +178,8 @@ describe('Header Accessibility', () => {
     expect(notificationButton).toBeInTheDocument();
 
     // Check for notification count indicator
-    expect(screen.getByText('3')).toBeInTheDocument();
+    const redDot = notificationButton.querySelector('.bg-red-500');
+    expect(redDot).toBeInTheDocument();
   });
 });
 

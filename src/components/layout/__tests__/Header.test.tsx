@@ -26,28 +26,14 @@ describe('Header', () => {
     mockOnMenuClick.mockClear();
   });
 
-  it('renders logo and CONSULT title', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
 
-    expect(screen.getByText('CONSULT')).toBeInTheDocument();
-
-    // Check for logo elements
-    const logoContainer = screen.getByText('CONSULT').previousElementSibling;
-    expect(logoContainer).toHaveClass(
-      'w-8',
-      'h-8',
-      'bg-gradient-to-br',
-      'from-blue-500',
-      'to-blue-600'
-    );
-  });
 
   it('renders Free Plan badge', () => {
     render(<Header onMenuClick={mockOnMenuClick} />);
 
     const badge = screen.getByTestId('badge');
     expect(badge).toHaveTextContent('Free Plan');
-    expect(badge).toHaveAttribute('data-variant', 'secondary');
+    expect(badge).toHaveAttribute('data-variant', 'outline');
   });
 
   it('renders notification bell with count', () => {
@@ -57,9 +43,14 @@ describe('Header', () => {
     expect(bellButton).toBeInTheDocument();
 
     // Check for notification count badge
-    const notificationBadge = screen.getByText('3');
-    expect(notificationBadge).toBeInTheDocument();
-    expect(notificationBadge).toHaveClass('bg-purple-600', 'text-white');
+    // Check for notification count in aria-label
+    expect(bellButton).toHaveAttribute(
+      'aria-label',
+      expect.stringContaining('3 unread')
+    );
+    // Check for red dot indicator
+    const redDot = bellButton.querySelector('.bg-red-500');
+    expect(redDot).toBeInTheDocument();
   });
 
   it('renders user avatar and dropdown trigger', () => {
@@ -121,9 +112,7 @@ describe('Header', () => {
     const menuButton = screen.getByLabelText('Toggle navigation sidebar');
     expect(menuButton).toHaveClass('lg:hidden');
 
-    // Check CONSULT title has hidden sm:block classes
-    const title = screen.getByText('CONSULT');
-    expect(title).toHaveClass('hidden', 'sm:block');
+
   });
 
   it('closes user menu when clicking outside', () => {

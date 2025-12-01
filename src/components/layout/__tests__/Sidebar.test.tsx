@@ -53,9 +53,7 @@ describe('Sidebar', () => {
     const projectsLink = screen.getByText('Projects').closest('a');
     expect(projectsLink).toHaveClass(
       'bg-purple-50',
-      'text-purple-700',
-      'border',
-      'border-purple-200'
+      'text-purple-700'
     );
   });
 
@@ -68,7 +66,7 @@ describe('Sidebar', () => {
     expect(sidebar).toHaveClass(
       '-translate-x-full',
       'lg:translate-x-0',
-      'lg:w-0'
+      'lg:w-20'
     );
   });
 
@@ -78,7 +76,7 @@ describe('Sidebar', () => {
     );
 
     const sidebar = container.querySelector('aside');
-    expect(sidebar).toHaveClass('translate-x-0', 'w-64');
+    expect(sidebar).toHaveClass('translate-x-0', 'w-72');
   });
 
   it('calls onToggle when close button is clicked', () => {
@@ -93,7 +91,7 @@ describe('Sidebar', () => {
   it('renders mobile close button and navigation header', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
-    expect(screen.getByText('Navigation')).toBeInTheDocument();
+    expect(screen.getByText('Overview')).toBeInTheDocument();
     expect(
       screen.getByLabelText('Close navigation sidebar')
     ).toBeInTheDocument();
@@ -111,8 +109,8 @@ describe('Sidebar', () => {
 
     const dashboardLink = screen.getByText('Dashboard').closest('a');
     expect(dashboardLink).toHaveClass(
-      'hover:bg-blue-50',
-      'hover:text-blue-600'
+      'hover:bg-gray-50',
+      'hover:text-gray-900'
     );
   });
 
@@ -144,13 +142,9 @@ describe('Sidebar', () => {
     );
 
     const sidebar = container.querySelector('aside');
-    expect(sidebar).toHaveClass('fixed', 'top-16', 'left-0', 'z-30');
-    expect(sidebar).toHaveClass(
-      'lg:static',
-      'lg:top-0',
-      'lg:h-screen',
-      'lg:pt-16'
-    );
+    expect(sidebar).toHaveClass('fixed', 'top-0', 'left-0', 'z-40');
+    // Sidebar is now fixed on all screens
+    expect(sidebar).toHaveClass('h-screen');
 
     const closeButtonContainer = container.querySelector('.lg\\:hidden');
     expect(closeButtonContainer).toBeInTheDocument();

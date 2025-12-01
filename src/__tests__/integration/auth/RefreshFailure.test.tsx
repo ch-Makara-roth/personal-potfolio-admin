@@ -29,6 +29,10 @@ describe('Refresh token failure handling', () => {
     jest.doMock('@/stores/auth-store', () => ({
       getAccessToken: () => 'valid.jwt.token',
       getRefreshToken: () => null,
+      refreshAccessToken: jest.fn(async () => {
+        clearSessionMock();
+        return null;
+      }),
       useAuthStore: {
         getState: () => ({
           isAccessTokenExpired: () => false,

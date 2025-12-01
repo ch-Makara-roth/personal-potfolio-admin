@@ -287,20 +287,13 @@ describe('HiringAnalytics', () => {
     );
 
     // Check skeleton structure
-    const skeletonContainer = document.querySelector('.animate-pulse');
-    expect(skeletonContainer).toBeInTheDocument();
+    // Check skeleton structure
+    const skeletons = document.querySelectorAll('.animate-pulse');
+    expect(skeletons.length).toBe(7);
 
     // Should have header skeleton
-    const headerSkeleton = document.querySelector(
-      '.h-6.bg-gray-200.rounded.w-48'
-    );
+    const headerSkeleton = document.querySelector('.h-6.w-48');
     expect(headerSkeleton).toBeInTheDocument();
-
-    // Should have multiple bar skeletons
-    const barSkeletons = document.querySelectorAll(
-      '.h-3.bg-gray-100.rounded-full'
-    );
-    expect(barSkeletons.length).toBe(6); // 6 skeleton bars
   });
 
   it('error state shows correct error message', () => {

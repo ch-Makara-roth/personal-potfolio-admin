@@ -12,8 +12,12 @@ import {
   Button,
   Avatar,
 } from '@/components/ui';
-import { useProfile, useUpdateProfile, useChangePassword } from '@/hooks/api';
-import { useUploadImage } from '@/hooks/api/useUploads';
+import {
+  useProfile,
+  useUpdateProfile,
+  useChangePassword,
+  useUploadImage,
+} from '@/hooks/api';
 import ImageUploadDialog from '@/components/ui/ImageUploadDialog';
 
 export default function AdminProfileSettingsPage() {

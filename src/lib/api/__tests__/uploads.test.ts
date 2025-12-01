@@ -12,6 +12,7 @@ jest.mock('@/stores/auth-store', () => {
     },
     getAccessToken: () => tokens?.accessToken ?? null,
     getRefreshToken: () => tokens?.refreshToken ?? null,
+    refreshAccessToken: jest.fn().mockResolvedValue({ accessToken: 'new-token' }),
   };
 });
 
