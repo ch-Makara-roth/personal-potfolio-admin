@@ -24,7 +24,7 @@ import {
   type JsxComponentDescriptor,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
-import Badge from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import Callout from './components/Callout';
 import Toolbar from './Toolbar';
 

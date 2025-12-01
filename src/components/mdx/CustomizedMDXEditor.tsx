@@ -10,11 +10,15 @@ export type CustomizedMDXEditorProps = MDXEditorProps & {
 export const CustomizedMDXEditor = forwardRef<
   MDXEditorMethods,
   CustomizedMDXEditorProps
->(function CustomizedMDXEditor({ initialMarkdown, ...props }, ref) {
+>(function CustomizedMDXEditor({ initialMarkdown, markdown, ...props }, ref) {
   const innerRef = useRef<MDXEditorMethods>(null);
   useImperativeHandle(ref, () => innerRef.current as MDXEditorMethods, []);
   return (
-    <ForwardRefEditor markdown={initialMarkdown} {...props} ref={innerRef} />
+    <ForwardRefEditor
+      markdown={markdown || initialMarkdown || ''}
+      {...props}
+      ref={innerRef}
+    />
   );
 });
 
