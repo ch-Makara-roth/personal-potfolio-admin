@@ -189,9 +189,20 @@ describe('UpcomingInterviews', () => {
     it('formats time slots correctly', () => {
       render(<UpcomingInterviews {...defaultProps} />);
 
-      // Should format time as HH:MM-HH:MM (times are converted to local timezone)
-      expect(screen.getByText('17:00-19:45')).toBeInTheDocument();
-      expect(screen.getByText('21:00-22:30')).toBeInTheDocument();
+      const formatTime = (dateStr: string) => {
+        return new Date(dateStr).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: false,
+        });
+      };
+
+      // Calculate expected strings based on current timezone
+      const slot1 = `${formatTime('2024-11-16T10:00:00Z')}-${formatTime('2024-11-16T12:45:00Z')}`;
+      const slot2 = `${formatTime('2024-11-17T14:00:00Z')}-${formatTime('2024-11-17T15:30:00Z')}`;
+
+      expect(screen.getByText(slot1)).toBeInTheDocument();
+      expect(screen.getByText(slot2)).toBeInTheDocument();
     });
 
     it('displays date labels correctly', () => {
