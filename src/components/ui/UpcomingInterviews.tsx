@@ -39,7 +39,8 @@ const interviewCardVariants = cva(
 );
 
 export interface UpcomingInterviewsComponentProps
-  extends UpcomingInterviewsProps,
+  extends
+    UpcomingInterviewsProps,
     VariantProps<typeof upcomingInterviewsVariants> {}
 
 const formatTimeSlot = (start: string, end: string): string => {

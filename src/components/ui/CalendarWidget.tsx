@@ -41,8 +41,7 @@ const dateVariants = cva(
 );
 
 export interface CalendarWidgetComponentProps
-  extends CalendarWidgetProps,
-    VariantProps<typeof calendarVariants> {}
+  extends CalendarWidgetProps, VariantProps<typeof calendarVariants> {}
 
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = [
