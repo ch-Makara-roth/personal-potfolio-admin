@@ -19,10 +19,10 @@ class MockIntersectionObserver implements IntersectionObserver {
   constructor(
     _callback?: IntersectionObserverCallback,
     _options?: IntersectionObserverInit
-  ) { }
-  disconnect(): void { }
-  observe(_target: Element): void { }
-  unobserve(_target: Element): void { }
+  ) {}
+  disconnect(): void {}
+  observe(_target: Element): void {}
+  unobserve(_target: Element): void {}
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
@@ -35,10 +35,10 @@ g.IntersectionObserver = MockIntersectionObserver as any;
 
 // Mock ResizeObserver with proper typings
 class MockResizeObserver implements ResizeObserver {
-  constructor(_callback?: ResizeObserverCallback) { }
-  disconnect(): void { }
-  observe(_target: Element, _options?: ResizeObserverOptions): void { }
-  unobserve(_target: Element): void { }
+  constructor(_callback?: ResizeObserverCallback) {}
+  disconnect(): void {}
+  observe(_target: Element, _options?: ResizeObserverOptions): void {}
+  unobserve(_target: Element): void {}
 }
 
 g.ResizeObserver = MockResizeObserver as any;
