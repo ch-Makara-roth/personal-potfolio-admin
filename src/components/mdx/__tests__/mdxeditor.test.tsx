@@ -20,6 +20,7 @@ jest.mock('@mdxeditor/editor', () => {
     }));
     return React.createElement('div', {}, md);
   });
+  MDXEditor.displayName = 'MDXEditor';
   return {
     MDXEditor,
     headingsPlugin: () => null,
