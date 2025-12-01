@@ -29,7 +29,9 @@ describe('ImageUploadDialog', () => {
     const input = screen.getByLabelText('Select image') as HTMLInputElement;
     const bad = new File(['x'], 'bad.txt', { type: 'text/plain' });
     fireEvent.change(input, { target: { files: [bad] } });
-    expect(await screen.findByText('Unsupported file type')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Unsupported file type')
+    ).toBeInTheDocument();
   });
 
   it('validates file size', async () => {

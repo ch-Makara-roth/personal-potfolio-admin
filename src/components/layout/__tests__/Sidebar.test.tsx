@@ -51,10 +51,7 @@ describe('Sidebar', () => {
     render(<Sidebar collapsed={false} onToggle={mockOnToggle} />);
 
     const projectsLink = screen.getByText('Projects').closest('a');
-    expect(projectsLink).toHaveClass(
-      'bg-purple-50',
-      'text-purple-700'
-    );
+    expect(projectsLink).toHaveClass('bg-purple-50', 'text-purple-700');
   });
 
   it('applies correct classes when collapsed', () => {

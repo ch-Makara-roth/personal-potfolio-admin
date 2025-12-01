@@ -26,8 +26,6 @@ describe('Header', () => {
     mockOnMenuClick.mockClear();
   });
 
-
-
   it('renders Free Plan badge', () => {
     render(<Header onMenuClick={mockOnMenuClick} />);
 
@@ -111,8 +109,6 @@ describe('Header', () => {
     // Check mobile menu button has lg:hidden class
     const menuButton = screen.getByLabelText('Toggle navigation sidebar');
     expect(menuButton).toHaveClass('lg:hidden');
-
-
   });
 
   it('closes user menu when clicking outside', () => {

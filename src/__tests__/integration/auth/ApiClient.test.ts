@@ -18,7 +18,9 @@ describe('API client authentication', () => {
         status: 200,
         json: async () => ({
           success: true,
-          data: { tokens: { accessToken: 'new.jwt.token', refreshToken: 'rt' } },
+          data: {
+            tokens: { accessToken: 'new.jwt.token', refreshToken: 'rt' },
+          },
         }),
       })
       // First actual request: success
@@ -75,7 +77,9 @@ describe('API client authentication', () => {
         status: 200,
         json: async () => ({
           success: true,
-          data: { tokens: { accessToken: 'new.jwt.token', refreshToken: 'rt' } },
+          data: {
+            tokens: { accessToken: 'new.jwt.token', refreshToken: 'rt' },
+          },
         }),
       })
       // Retried requests succeed
