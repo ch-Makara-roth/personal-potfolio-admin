@@ -2,12 +2,14 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AdminEditBlogPostPage from '../page';
 
+const mockPostData = {
+  data: { data: { title: 'T', content: '# Hello', status: 'DRAFT' } },
+  isLoading: false,
+  isError: false,
+};
+
 jest.mock('@/hooks/api', () => ({
-  useAdminBlogPost: () => ({
-    data: { data: { title: 'T', content: '# Hello', status: 'DRAFT' } },
-    isLoading: false,
-    isError: false,
-  }),
+  useAdminBlogPost: () => mockPostData,
   useUpdateBlogPost: () => ({ mutate: jest.fn(), isPending: false }),
 }));
 
@@ -27,6 +29,18 @@ jest.mock('@/components/layout', () => ({
 jest.mock('@/components/providers/AuthGuard', () => ({
   AuthGuard: () => null,
 }));
+
+jest.mock('@/components/MarkdownEditor', () => {
+  return function MockMarkdownEditor({ value, onChange }: any) {
+    return (
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        data-testid="markdown-editor"
+      />
+    );
+  };
+});
 
 describe('Blog editor integration', () => {
   test('renders MarkdownEditor with initial content', () => {

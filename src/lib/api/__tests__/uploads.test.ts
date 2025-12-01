@@ -24,6 +24,12 @@ describe('uploadsApi', () => {
     jest.resetModules();
     process.env.NEXT_PUBLIC_API_VERSION = 'v9';
     (global as any).fetch = jest.fn();
+    jest.spyOn(console, 'error').mockImplementation(() => { });
+    jest.spyOn(console, 'log').mockImplementation(() => { });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe('uploadImage', () => {
