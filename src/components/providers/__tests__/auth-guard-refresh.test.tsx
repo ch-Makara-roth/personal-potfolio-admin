@@ -11,8 +11,10 @@ jest.mock('next/navigation', () => {
   };
 });
 
-jest.mock('@/lib/api', () => {
+jest.mock('@/stores/auth-store', () => {
+  const original = jest.requireActual('@/stores/auth-store');
   return {
+    ...original,
     refreshAccessToken: jest.fn(async () => ({
       accessToken: 'new.token',
       expiresIn: 3600,
@@ -56,7 +58,7 @@ describe('AuthGuard refresh behavior', () => {
   });
 
   it('redirects when refresh fails', async () => {
-    const { refreshAccessToken } = require('@/lib/api');
+    const { refreshAccessToken } = require('@/stores/auth-store');
     refreshAccessToken.mockResolvedValueOnce(null);
     const { useRouter } = require('next/navigation');
     const router = useRouter();

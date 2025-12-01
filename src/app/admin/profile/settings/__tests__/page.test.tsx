@@ -71,7 +71,7 @@ describe('AdminProfileSettingsPage avatar upload', () => {
     ) as HTMLElement;
     fireEvent.click(avatarButton);
     expect(
-      screen.getByRole('dialog', { name: /upload avatar/i })
+      screen.getByRole('dialog', { name: /image uploader/i })
     ).toBeInTheDocument();
     const input = screen.getByLabelText(/select image/i);
     const file = new File(['x'], 'avatar.png', { type: 'image/png' });
@@ -83,7 +83,7 @@ describe('AdminProfileSettingsPage avatar upload', () => {
 
     await waitFor(() =>
       expect(
-        screen.queryByRole('dialog', { name: /upload avatar/i })
+        screen.queryByRole('dialog', { name: /image uploader/i })
       ).not.toBeInTheDocument()
     );
   });

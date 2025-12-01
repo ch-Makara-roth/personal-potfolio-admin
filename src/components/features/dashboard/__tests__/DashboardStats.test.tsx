@@ -73,7 +73,7 @@ describe('DashboardStats', () => {
 
     // Should show loading skeletons
     const skeletons = document.querySelectorAll('.animate-pulse');
-    expect(skeletons).toHaveLength(3);
+    expect(skeletons).toHaveLength(9);
   });
 
   it('renders error state correctly', () => {
