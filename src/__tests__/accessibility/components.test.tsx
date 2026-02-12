@@ -109,7 +109,9 @@ describe('Header Accessibility', () => {
   });
 
   it('should have no accessibility violations', async () => {
-    const { container } = render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
+    const { container } = render(
+      <Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />
+    );
     // Note: Would use axe for full accessibility testing
     // const results = await axe(container);
     // expect(results).toHaveNoViolations();
