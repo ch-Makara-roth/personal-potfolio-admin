@@ -48,9 +48,18 @@ export function AppLayout({
     }
   }, [isMobile]);
 
+  // Restore sidebar state from local storage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('sidebar_collapsed_state');
+    if (stored !== null) {
+      setSidebarCollapsed(stored === 'true');
+    }
+  }, []);
+
   const toggleSidebar = () => {
     const newCollapsed = !sidebarCollapsed;
     setSidebarCollapsed(newCollapsed);
+    localStorage.setItem('sidebar_collapsed_state', String(newCollapsed));
 
     // Announce sidebar state change
     announce(
@@ -99,16 +108,26 @@ export function AppLayout({
     : 'transition-all duration-300 ease-in-out';
 
   return (
-    <div className="min-h-screen bg-gray-50/50 dark:bg-gray-950 safe-area-inset">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 safe-area-inset relative overflow-hidden">
+      {/* Background Gradients for Premium Feel */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-purple-50/50 to-transparent dark:from-purple-900/10 dark:to-transparent" />
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-200/20 dark:bg-purple-900/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-blue-200/20 dark:bg-blue-900/10 rounded-full blur-[80px] translate-x-1/3" />
+      </div>
+
       {/* Skip Links - These will be added by the useSkipLinks hook */}
 
       {/* Header */}
-      <div id={headerId}>
-        <Header onMenuClick={toggleSidebar} />
+      <div id={headerId} className="relative z-30">
+        <Header
+          onMenuClick={toggleSidebar}
+          sidebarCollapsed={sidebarCollapsed}
+        />
       </div>
 
       {/* Sidebar */}
-      <div id={sidebarId}>
+      <div id={sidebarId} className="relative z-40">
         <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
       </div>
 
@@ -127,8 +146,8 @@ export function AppLayout({
       <main
         id={mainContentId}
         className={cn(
-          'flex-1 min-h-screen pt-16 transition-all duration-300 ease-in-out',
-          sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72'
+          'relative z-10 flex-1 min-h-screen pt-16 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]',
+          sidebarCollapsed ? 'lg:ml-[4.5rem]' : 'lg:ml-72'
         )}
         role="main"
         aria-label="Main content"

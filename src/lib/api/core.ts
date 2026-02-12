@@ -1,7 +1,7 @@
 import { ApiResponse, ApiError } from '@/types/api';
 
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3111/api';
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
 export const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION || 'v1';
 export const API_TIMEOUT = 10000; // 10 seconds
 

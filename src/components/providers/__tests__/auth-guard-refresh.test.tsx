@@ -52,7 +52,11 @@ describe('AuthGuard refresh behavior', () => {
     const { useRouter } = require('next/navigation');
     const router = useRouter();
     await act(async () => {
-      render(<AuthGuard />);
+      render(
+        <AuthGuard>
+          <div />
+        </AuthGuard>
+      );
     });
     expect(router.replace).not.toHaveBeenCalled();
   });
@@ -63,7 +67,11 @@ describe('AuthGuard refresh behavior', () => {
     const { useRouter } = require('next/navigation');
     const router = useRouter();
     await act(async () => {
-      render(<AuthGuard />);
+      render(
+        <AuthGuard>
+          <div />
+        </AuthGuard>
+      );
     });
     expect(router.replace).toHaveBeenCalledWith('/login');
   });

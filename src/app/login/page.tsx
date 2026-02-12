@@ -1,19 +1,20 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { authApi } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
-import { useAuthStore } from '@/stores';
-import { useNotificationActions } from '@/stores';
-import { Eye, EyeOff, Apple } from 'lucide-react';
+import { useAuthStore, useNotificationActions } from '@/stores';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { logAuthEvent, reportAuthError } from '@/services/auth-logging';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
-  const setSession = useAuthStore((s) => s.setSession);
+  const searchParams = useSearchParams();
+  const { setSession, isAuthenticated } = useAuthStore((s) => ({
+    setSession: s.setSession,
+    isAuthenticated: s.isAuthenticated,
+  }));
   const { showToast } = useNotificationActions();
 
   const [identifier, setIdentifier] = useState('');
@@ -22,18 +23,26 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = searchParams.get('from') || '/dashboard';
+      router.replace(from);
+    }
+  }, [isAuthenticated, router, searchParams]);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     logAuthEvent('login_start');
+
     try {
       const res = await authApi.login({ identifier, password });
       setSession(res.data.user, res.data.tokens);
 
       // Set auth_token cookie for middleware
       const { accessToken, expiresIn } = res.data.tokens;
-      // Default to 1 day if expiresIn is missing, otherwise use expiresIn (seconds)
       const maxAge = expiresIn || 86400;
       document.cookie = `auth_token=${accessToken}; path=/; max-age=${maxAge}; SameSite=Lax`;
 
@@ -44,9 +53,8 @@ export default function LoginPage() {
         message: 'Login successful',
       });
 
-      // Get return URL from query params or default to dashboard
-      const params = new URLSearchParams(window.location.search);
-      const from = params.get('from') || '/dashboard';
+      // Redirect will happen via useEffect or we can force it here
+      const from = searchParams.get('from') || '/dashboard';
       router.replace(from);
     } catch (err: any) {
       const message = err?.message || 'Login failed. Please try again.';
@@ -54,154 +62,219 @@ export default function LoginPage() {
       logAuthEvent('login_failure');
       reportAuthError(err instanceof Error ? err : new Error(String(err)));
       showToast({ type: 'error', title: 'Login failed', message });
-    } finally {
-      setLoading(false);
+      setLoading(false); // Only stop loading on error, let success redirect
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 grid grid-cols-1 md:grid-cols-2">
-      {/* Left: Gradient panel with brand and form (full height) */}
-      <div className="relative flex items-center justify-center bg-gradient-to-br from-yellow-50 via-gray-50 to-yellow-100 p-6 sm:p-8 md:p-12 lg:p-16 min-h-[60vh] md:min-h-screen">
-        <div className="w-full max-w-md">
-          <h1 className="text-2xl font-semibold text-gray-900">Sign in</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Sign in and get 30 day free trial
-          </p>
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
+      {/* Left: Form Panel */}
+      <div className="relative flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 px-6 py-12 sm:px-8 md:px-12 lg:px-16 min-h-screen">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-indigo-100/40 to-purple-100/40 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-amber-100/30 to-orange-100/30 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+        <div className="relative w-full max-w-md z-10">
+          {/* Brand/Logo area */}
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/25 mb-6">
+              <Lock className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+              Welcome back
+            </h1>
+            <p className="mt-2 text-gray-500">
+              Sign in to access your admin dashboard
+            </p>
+          </div>
 
           <form
             onSubmit={onSubmit}
-            className="mt-6 space-y-4"
+            className="space-y-5"
             aria-describedby={error ? 'login-error' : undefined}
           >
             {/* Identifier */}
-            <div>
+            <div className="space-y-1.5">
               <label
                 htmlFor="identifier"
                 className="block text-sm font-medium text-gray-700"
               >
                 Email or Username
               </label>
-              <input
-                id="identifier"
-                type="text"
-                autoComplete="username email"
-                required
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                className="mt-1 block w-full rounded-full border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Mail size={18} />
+                </div>
+                <input
+                  id="identifier"
+                  type="text"
+                  autoComplete="username email"
+                  required
+                  placeholder="Enter your email or username"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  className="block w-full rounded-xl border border-gray-200 bg-white/80 backdrop-blur-sm pl-11 pr-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:bg-white hover:border-gray-300"
+                />
+              </div>
             </div>
 
             {/* Password with show/hide toggle */}
-            <div>
+            <div className="space-y-1.5">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
                 Password
               </label>
-              <div className="mt-1 relative">
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Lock size={18} />
+                </div>
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-full border border-gray-300 bg-white px-4 py-3 pr-12 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="block w-full rounded-xl border border-gray-200 bg-white/80 backdrop-blur-sm pl-11 pr-12 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:bg-white hover:border-gray-300"
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   onClick={() => setShowPassword((v) => !v)}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
+
+            {/* Forgot password link */}
+            <div className="flex justify-end">
+              <a
+                href="#"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
+              >
+                Forgot password?
+              </a>
+            </div>
+
             {error && (
-              <p
+              <div
                 id="login-error"
                 role="alert"
                 aria-live="polite"
-                className="text-sm text-red-600"
+                className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-100 text-sm text-red-600"
               >
+                <svg
+                  className="w-4 h-4 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
                 {error}
-              </p>
+              </div>
             )}
+
             <Button
               type="submit"
-              className="w-full rounded-full bg-yellow-400 text-gray-900 hover:bg-yellow-300"
+              className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium py-3.5 shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:from-indigo-500 hover:to-purple-500 transition-all duration-200"
               loading={loading}
               loadingText="Signing in..."
             >
-              Submit
+              Sign in
             </Button>
-            {/* <div className="mt-4 grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      className="flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <Apple size={18} /> Apple
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path fill="#EA4335" d="M12 10v4h5.6c-.24 1.28-1.35 3.76-5.6 3.76A6.76 6.76 0 0 1 6.24 12 6.76 6.76 0 0 1 12 5.24c1.92 0 3.2.8 3.92 1.48l2.68-2.6C17.28 2.4 14.88 1.5 12 1.5 6.72 1.5 2.5 5.72 2.5 12S6.72 22.5 12 22.5c6.32 0 9.5-4.44 9.5-8.56 0-.64-.08-1.04-.16-1.44H12Z"/>
-                        <path fill="#34A853" d="M3.18 7.41 6.24 9.64A6.76 6.76 0 0 1 12 5.24c1.92 0 3.2.8 3.92 1.48l2.68-2.6C17.28 2.4 14.88 1.5 12 1.5 8.67 1.5 5.74 3.02 3.96 5.12Z" opacity=".001"/>
-                        <path fill="#FBBC05" d="M21.34 13.94c-.24 1.28-1.35 3.76-5.6 3.76A6.76 6.76 0 0 1 6.24 12c0-.82.15-1.6.41-2.32L3.18 7.41A9.44 9.44 0 0 0 2.5 12c0 5.28 4.22 9.5 9.5 9.5 4.9 0 8.74-3.2 9.34-7.56Z"/>
-                        <path fill="#4285F4" d="M12 22.5c6.32 0 9.5-4.44 9.5-8.56 0-.64-.08-1.04-.16-1.44H12v4h5.6c-.8 4.08-4.32 6-5.6 6Z" opacity=".8"/>
-                      </svg>
-                      Google
-                    </button>
-                  </div>
-                  <div className="mt-6 flex items-center justify-between text-xs text-gray-500">
-                    <span>
-                      Have any account?{' '}
-                      <a href="#" className="font-semibold text-gray-700 hover:underline">Sign in</a>
-                    </span>
-                    <a href="#" className="hover:underline">Terms &amp; Conditions</a>
-                  </div> */}
           </form>
+
+          {/* Footer */}
+          <p className="mt-8 text-center text-sm text-gray-500">
+            Protected by enterprise-grade security
+          </p>
         </div>
       </div>
 
-      {/* Right: Hero photo with overlays (full height) */}
-      <div className="relative hidden md:block min-h-[60vh] md:min-h-screen bg-gray-900">
-        {/* Background photo */}
-        <Image
-          src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1920&auto=format&fit=crop"
-          alt="Team collaborating around a desk"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
+      {/* Right: Hero Image Panel */}
+      <div className="relative hidden lg:flex flex-col items-center justify-center min-h-screen overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800" />
+
+        {/* Pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
         />
-        {/* mini calendar bottom center */}
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-28">
-          <div className="rounded-2xl bg-white/60 backdrop-blur-glass p-3 shadow-card">
-            <div className="grid grid-cols-7 gap-2 text-center">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-                <div key={d} className="text-[10px] text-gray-700">
-                  {d}
+
+        {/* Content overlay */}
+        <div className="relative z-10 text-center px-12 max-w-lg">
+          {/* Floating card illustration */}
+          <div className="mb-8 relative">
+            <div className="w-64 h-44 mx-auto bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-6 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500" />
+                <div className="space-y-1.5">
+                  <div className="w-24 h-2.5 bg-white/40 rounded-full" />
+                  <div className="w-16 h-2 bg-white/25 rounded-full" />
                 </div>
-              ))}
-              {[22, 23, 24, 25, 26, 27, 28].map((n, i) => (
-                <div
-                  key={n}
-                  className={`rounded-md px-2 py-1 text-[11px] ${i >= 2 && i <= 5 ? 'bg-white/80' : 'bg-transparent'} text-gray-900`}
-                >
-                  {n}
-                </div>
-              ))}
+              </div>
+              <div className="space-y-2">
+                <div className="w-full h-2 bg-white/20 rounded-full" />
+                <div className="w-4/5 h-2 bg-white/20 rounded-full" />
+                <div className="w-3/5 h-2 bg-white/20 rounded-full" />
+              </div>
+            </div>
+            <div className="absolute -bottom-4 -right-4 w-48 h-32 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl p-4 transform -rotate-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-8 h-8 rounded-lg bg-green-400/80" />
+                <div className="text-white/80 text-xs font-medium">+24%</div>
+              </div>
+              <div className="flex items-end gap-1 h-12">
+                {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 bg-white/30 rounded-t"
+                    style={{ height: `${h}%` }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
+
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Manage Your Portfolio
+          </h2>
+          <p className="text-indigo-100/80 text-lg leading-relaxed">
+            A powerful admin dashboard to manage your projects, skills, and
+            professional content with ease.
+          </p>
         </div>
+
+        {/* Decorative blurs */}
+        <div className="absolute top-20 left-20 w-64 h-64 bg-purple-400/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-indigo-400/30 rounded-full blur-3xl" />
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

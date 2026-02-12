@@ -1,5 +1,5 @@
 import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
-import { ApiClientError } from './api';
+import { ApiClientError } from './api/core';
 
 // Global error handler for queries
 const handleQueryError = (error: unknown) => {

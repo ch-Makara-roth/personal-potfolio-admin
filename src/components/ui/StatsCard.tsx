@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId as reactUseId } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/utils';
@@ -86,6 +86,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
     const titleId = useId('stats-title');
     const valueId = useId('stats-value');
     const trendId = useId('stats-trend');
+    const gradientId = `${variant}Gradient${reactUseId()}`;
 
     // Calculate trend direction for accessibility
     const trendDirection =
@@ -177,6 +178,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
               <TrendLine
                 data={trend.data}
                 variant={variant}
+                gradientId={gradientId}
                 trendId={trendId}
                 trendDirection={trendDirection}
               />
@@ -194,6 +196,7 @@ StatsCard.displayName = 'StatsCard';
 interface TrendLineProps {
   data: number[];
   variant: 'applications' | 'interviews' | 'hired';
+  gradientId: string;
   trendId?: string;
   trendDirection?: 'increasing' | 'decreasing' | null;
 }
@@ -201,6 +204,7 @@ interface TrendLineProps {
 const TrendLine: React.FC<TrendLineProps> = ({
   data,
   variant,
+  gradientId,
   trendId,
   trendDirection,
 }) => {
@@ -233,16 +237,9 @@ const TrendLine: React.FC<TrendLineProps> = ({
     hired: '#06B6D4', // cyan-500
   }[variant];
 
-  const fillColor = isHighContrast
-    ? 'none'
-    : {
-        applications: 'url(#purpleGradient)',
-        interviews: 'url(#blueGradient)',
-        hired: 'url(#cyanGradient)',
-      }[variant];
+  const fillColor = isHighContrast ? 'none' : `url(#${gradientId})`;
 
-  // Generate unique gradient IDs to avoid conflicts
-  const gradientId = `${variant}Gradient-${Math.random().toString(36).substr(2, 9)}`;
+  // gradientId is passed in from the parent via React's useId hook (SSR-safe)
 
   const trendText =
     trendDirection === 'increasing' ? 'Trending up' : 'Trending down';
@@ -260,11 +257,10 @@ const TrendLine: React.FC<TrendLineProps> = ({
           aria-describedby={`${trendId}-desc`}
         >
           <title id={trendId}>
-            Trend chart showing {trendDirection} pattern
+            {`Trend chart showing ${trendDirection} pattern`}
           </title>
           <desc id={`${trendId}-desc`}>
-            Chart displaying {data.length} data points with values ranging from{' '}
-            {min} to {max}
+            {`Chart displaying ${data.length} data points with values ranging from ${min} to ${max}`}
           </desc>
 
           {!isHighContrast && (

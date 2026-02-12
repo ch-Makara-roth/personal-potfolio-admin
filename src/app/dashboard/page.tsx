@@ -2,7 +2,6 @@
 
 import React, { useState, Suspense, lazy } from 'react';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { FileText, FolderGit2, MessageSquare } from 'lucide-react';
 import { StatsCard } from '@/components/ui';
 import { StatsCardSkeleton } from '@/components/ui/Skeleton';
@@ -38,7 +37,6 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         {/* Page Header */}
         <div>

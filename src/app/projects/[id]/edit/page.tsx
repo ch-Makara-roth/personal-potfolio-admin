@@ -3,7 +3,6 @@
 import React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Button } from '@/components/ui/Button';
 import { ToastContainer, useToast } from '@/components/ui/Toast';
 import { ProjectsForm } from '@/components/features/projects';
@@ -36,7 +35,6 @@ export default function EditProjectPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <ToastContainer position="top-right" />
 
       <div className="space-y-6">
