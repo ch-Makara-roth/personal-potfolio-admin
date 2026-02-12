@@ -109,7 +109,7 @@ describe('Header Accessibility', () => {
   });
 
   it('should have no accessibility violations', async () => {
-    const { container } = render(<Header onMenuClick={mockOnMenuClick} />);
+    const { container } = render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
     // Note: Would use axe for full accessibility testing
     // const results = await axe(container);
     // expect(results).toHaveNoViolations();
@@ -119,7 +119,7 @@ describe('Header Accessibility', () => {
   });
 
   it('should have proper landmark roles', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     expect(screen.getByRole('banner')).toBeInTheDocument();
     expect(
@@ -128,7 +128,7 @@ describe('Header Accessibility', () => {
   });
 
   it('should have accessible menu button', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const menuButton = screen.getByLabelText(/toggle navigation sidebar/i);
     expect(menuButton).toHaveAttribute('aria-expanded', 'false');
@@ -137,7 +137,7 @@ describe('Header Accessibility', () => {
 
   it('should have accessible user menu', async () => {
     const user = userEvent.setup();
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const userMenuButton = screen.getByLabelText(/user account menu/i);
     expect(userMenuButton).toHaveAttribute('aria-haspopup', 'menu');
@@ -154,7 +154,7 @@ describe('Header Accessibility', () => {
 
   it('should handle keyboard navigation in user menu', async () => {
     const user = userEvent.setup();
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const userMenuButton = screen.getByLabelText(/user account menu/i);
 
@@ -170,7 +170,7 @@ describe('Header Accessibility', () => {
   });
 
   it('should have accessible notifications', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const notificationButton = screen.getByLabelText(
       /notifications.*3 unread/i
