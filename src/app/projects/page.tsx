@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { ProjectsTable } from '@/components/features/projects';
 import ConfirmDeleteDialog from '@/components/ui/ConfirmDeleteDialog';
 import { Button } from '@/components/ui/Button';
@@ -122,7 +121,6 @@ export default function ProjectsPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       {/* Toasts container */}
       <ToastContainer position="top-right" />
 

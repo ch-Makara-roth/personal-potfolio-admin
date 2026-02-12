@@ -29,9 +29,10 @@ import { cn } from '@/utils/cn';
 
 interface HeaderProps {
   onMenuClick: () => void;
+  sidebarCollapsed: boolean;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [notificationCount] = useState(3); // Mock notification count
   const [userProfile, setUserProfile] = useState<AuthUser | null>(null);
@@ -177,21 +178,23 @@ export function Header({ onMenuClick }: HeaderProps) {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-30 h-16',
-        'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-800/50',
-        'transition-all duration-200'
+        'fixed top-0 right-0 z-30 h-16 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]',
+        'bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60',
+        'border-b border-gray-200/50 dark:border-gray-800/50',
+        'left-0 lg:left-72', // Default expanded state
+        sidebarCollapsed && 'lg:left-[4.5rem]' // Collapsed state
       )}
       role="banner"
     >
       <div className="flex items-center justify-between h-full px-4 lg:px-6 max-w-[1920px] mx-auto">
         {/* Left Section - Logo and Menu */}
         <div className="flex items-center gap-4">
-          {/* Mobile Menu Button */}
+          {/* Menu Button (Sidebar Toggle) */}
           <button
             onClick={onMenuClick}
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden transition-colors focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none text-gray-600 dark:text-gray-400"
             aria-label="Toggle navigation sidebar"
-            aria-expanded="false"
+            aria-expanded={!sidebarCollapsed}
             aria-controls="sidebar-navigation"
           >
             <Menu

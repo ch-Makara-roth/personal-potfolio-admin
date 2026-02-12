@@ -26,7 +26,11 @@ jest.mock('@/stores', () => {
 
 describe('AuthGuard', () => {
   it('redirects to /login when not authenticated', () => {
-    const { container } = render(<AuthGuard />);
+    const { container } = render(
+      <AuthGuard>
+        <div />
+      </AuthGuard>
+    );
     expect(container).toBeEmptyDOMElement();
   });
 });

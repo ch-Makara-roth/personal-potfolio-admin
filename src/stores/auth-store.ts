@@ -108,7 +108,7 @@ export const useAuthStore = create<AuthState>()(
       onRehydrateStorage: () => {
         return (state) => {
           useAuthStore.setState({ hasHydrated: true });
-          if (state?.tokens?.accessToken) {
+          if (state && state.tokens && state.tokens.accessToken) {
             scheduleAutoRefresh();
           }
         };

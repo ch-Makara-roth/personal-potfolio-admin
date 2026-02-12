@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import {
   Card,
   CardHeader,
@@ -219,7 +218,6 @@ export default function AdminProfileSettingsPage() {
   if (profileLoading) {
     return (
       <AppLayout>
-        <AuthGuard />
         <div className="space-y-6">
           <h1 className="text-2xl font-semibold">Profile Settings</h1>
           <div className="text-gray-500">Loading profile...</div>
@@ -231,7 +229,6 @@ export default function AdminProfileSettingsPage() {
   if (profileError) {
     return (
       <AppLayout>
-        <AuthGuard />
         <div className="space-y-6">
           <h1 className="text-2xl font-semibold">Profile Settings</h1>
           <div className="text-red-600">Failed to load profile</div>
@@ -242,7 +239,6 @@ export default function AdminProfileSettingsPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         <h1 className="text-2xl font-semibold">Profile Settings</h1>
 

@@ -1,6 +1,5 @@
 'use client';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useParams } from 'next/navigation';
@@ -14,7 +13,6 @@ export default function AdminContactDetailPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Message Detail</h1>

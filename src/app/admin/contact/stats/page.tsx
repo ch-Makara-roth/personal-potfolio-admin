@@ -1,6 +1,5 @@
 'use client';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
 import { useAdminContactStats } from '@/hooks/api';
 
@@ -9,7 +8,6 @@ export default function AdminContactStatsPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         <h1 className="text-2xl font-semibold">Contact Stats</h1>
         <Card className="p-6">

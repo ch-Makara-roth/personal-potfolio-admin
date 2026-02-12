@@ -1,6 +1,5 @@
 'use client';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
@@ -86,7 +85,6 @@ export default function AdminBlogPostDetailPage({
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         {/* Post delete confirmation dialog */}
         <ConfirmDeleteDialog

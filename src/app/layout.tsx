@@ -25,8 +25,7 @@ export default function RootLayout({
         <QueryProvider>
           {/* Global login gate: prevents access to any features without authentication */}
           {/* AuthGuard will no-op on /login and redirect on protected routes */}
-          <AuthGuard />
-          {children}
+          <AuthGuard>{children}</AuthGuard>
         </QueryProvider>
       </body>
     </html>

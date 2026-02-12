@@ -4,7 +4,6 @@ import React from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -20,7 +19,6 @@ export default function ViewProjectPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <ToastContainer position="top-right" />
 
       <div className="space-y-6">

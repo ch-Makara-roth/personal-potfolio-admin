@@ -1,6 +1,5 @@
 'use client';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -57,7 +56,6 @@ export default function AdminBlogPostsPage() {
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         <ConfirmDeleteDialog
           open={showDeleteConfirm}

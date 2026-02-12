@@ -1,6 +1,5 @@
 'use client';
 import { AppLayout } from '@/components/layout';
-import { AuthGuard } from '@/components/providers/AuthGuard';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -264,7 +263,6 @@ export default function AdminEditBlogPostPage({
   if (isLoading) {
     return (
       <AppLayout>
-        <AuthGuard />
         <div className="p-8 text-center">Loading post...</div>
       </AppLayout>
     );
@@ -273,7 +271,6 @@ export default function AdminEditBlogPostPage({
   if (isError) {
     return (
       <AppLayout>
-        <AuthGuard />
         <div className="p-8 text-center text-red-600">
           Error loading post: {error?.message}
         </div>
@@ -283,7 +280,6 @@ export default function AdminEditBlogPostPage({
 
   return (
     <AppLayout>
-      <AuthGuard />
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Edit Blog Post</h1>
