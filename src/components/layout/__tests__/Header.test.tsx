@@ -27,7 +27,7 @@ describe('Header', () => {
   });
 
   it('renders Free Plan badge', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const badge = screen.getByTestId('badge');
     expect(badge).toHaveTextContent('Free Plan');
@@ -35,7 +35,7 @@ describe('Header', () => {
   });
 
   it('renders notification bell with count', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const bellButton = screen.getByLabelText(/Notifications/);
     expect(bellButton).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('Header', () => {
   });
 
   it('renders user avatar and dropdown trigger', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const avatar = screen.getByTestId('avatar');
     expect(avatar).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe('Header', () => {
   });
 
   it('calls onMenuClick when mobile menu button is clicked', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const menuButton = screen.getByLabelText('Toggle navigation sidebar');
     fireEvent.click(menuButton);
@@ -71,7 +71,7 @@ describe('Header', () => {
   });
 
   it('toggles user dropdown menu when clicked', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const userMenuButton = screen.getByLabelText('User account menu');
 
@@ -91,7 +91,7 @@ describe('Header', () => {
   });
 
   it('renders all dropdown menu items', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const userMenuButton = screen.getByLabelText('User account menu');
     fireEvent.click(userMenuButton);
@@ -101,18 +101,19 @@ describe('Header', () => {
   });
 
   it('applies correct responsive classes', () => {
-    render(<Header onMenuClick={mockOnMenuClick} />);
+    render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const header = screen.getByRole('banner');
     expect(header).toHaveClass('fixed', 'top-0', 'left-0', 'right-0', 'z-30');
 
     // Check mobile menu button has lg:hidden class
     const menuButton = screen.getByLabelText('Toggle navigation sidebar');
-    expect(menuButton).toHaveClass('lg:hidden');
+    // lg:hidden is no longer applied as the button is used to toggle sidebar on desktop too
+    expect(menuButton).toBeInTheDocument();
   });
 
   it('closes user menu when clicking outside', () => {
-    const { container } = render(<Header onMenuClick={mockOnMenuClick} />);
+    const { container } = render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
 
     const userMenuButton = screen.getByLabelText('User account menu');
     fireEvent.click(userMenuButton);
