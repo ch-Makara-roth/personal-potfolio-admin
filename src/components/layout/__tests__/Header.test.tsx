@@ -113,7 +113,9 @@ describe('Header', () => {
   });
 
   it('closes user menu when clicking outside', () => {
-    const { container } = render(<Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />);
+    const { container } = render(
+      <Header onMenuClick={mockOnMenuClick} sidebarCollapsed={false} />
+    );
 
     const userMenuButton = screen.getByLabelText('User account menu');
     fireEvent.click(userMenuButton);
